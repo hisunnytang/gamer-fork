@@ -1296,6 +1296,7 @@ void Check_Makefile( const char *FileName, const int FormatVersion )
    LoadField( "SupportHDF5",            &RS.SupportHDF5,            SID, TID, NonFatal, &RT.SupportHDF5,            1, NonFatal );
    LoadField( "SupportGSL",             &RS.SupportGSL,             SID, TID, NonFatal, &RT.SupportGSL,             1, NonFatal );
    LoadField( "SupportGrackle",         &RS.SupportGrackle,         SID, TID, NonFatal, &RT.SupportGrackle,         1, NonFatal );
+   LoadField( "SupportDengo",           &RS.SupportDengo,           SID, TID, NonFatal, &RT.SupportDengo,         1, NonFatal );
    LoadField( "RandomNumber",           &RS.RandomNumber,           SID, TID, NonFatal, &RT.RandomNumber,           1, NonFatal );
 
    LoadField( "NLevel",                 &RS.NLevel,                 SID, TID, NonFatal, &RT.NLevel,                 1, NonFatal );
@@ -1746,6 +1747,12 @@ void Check_InputPara( const char *FileName, const int FormatVersion )
    LoadField( "Grackle_PE_Heating",      &RS.Grackle_PE_Heating,      SID, TID, NonFatal, &RT.Grackle_PE_Heating,       1, NonFatal );
    LoadField( "Grackle_PE_HeatingRate",  &RS.Grackle_PE_HeatingRate,  SID, TID, NonFatal, &RT.Grackle_PE_HeatingRate,   1, NonFatal );
    LoadField( "Grackle_CloudyTable",     &RS.Grackle_CloudyTable,     SID, TID, NonFatal,  RT.Grackle_CloudyTable,      1, NonFatal );
+   LoadField( "Che_GPU_NPGroup",         &RS.Che_GPU_NPGroup,         SID, TID, NonFatal, &RT.Che_GPU_NPGroup,          1, NonFatal );
+#  endif
+
+// Dengo
+#  ifdef SUPPORT_DENGO
+   LoadField( "Dengo_Activate",          &RS.Dengo_Activate,          SID, TID, NonFatal, &RT.Dengo_Activate,           1, NonFatal );
    LoadField( "Che_GPU_NPGroup",         &RS.Che_GPU_NPGroup,         SID, TID, NonFatal, &RT.Che_GPU_NPGroup,          1, NonFatal );
 #  endif
 

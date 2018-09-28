@@ -51,6 +51,11 @@ extern "C" {
 }
 #endif // #ifdef SUPPORT_GRACKLE
 
+#ifdef SUPPORT_DENGO
+#include <cvklu_solver.h>
+#endif // #ifdef SUPPORT_DENGO
+
+
 #ifdef SUPPORT_LIBYT
 #  include <libyt.h>
 #endif

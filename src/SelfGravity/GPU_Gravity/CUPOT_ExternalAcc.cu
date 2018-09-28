@@ -48,6 +48,7 @@ void CUPOT_ExternalAcc( real Acc[], const double x, const double y, const double
 #else
 void   CPU_ExternalAcc( real Acc[], const double x, const double y, const double z, const double Time, const double UserArray[] )
 #endif
+#ifndef EXTERNAL_NFW_POTENTIAL
 {
 
    const double Cen[3] = { UserArray[0], UserArray[1], UserArray[2] };
@@ -76,7 +77,30 @@ void   CPU_ExternalAcc( real Acc[], const double x, const double y, const double
    Acc[2] = -GM*_r3*dz;
 
 } // FUNCTION : CUPOT_ExternalAcc / CPU_ExternalAcc
+#else
+{
+   // Potential for a NFW Profile
+   // 
+   const double Cen[3]         = { UserArray[0], UserArray[1], UserArray[2] };
+   const real   FourPiGrho     = (real)UserArray[3];
+   const real   dx             = (real)(x - Cen[0]);
+   const real   dy             = (real)(y - Cen[1]);
+   const real   dz             = (real)(z - Cen[2]);
+   const real   r              = SQRT( dx*dx + dy*dy + dz*dz );
+   const real   Rs             = (real)UserArray[4]; 
+   const real   eps            = (real)UserArray[5] ;
+
+   // soften the potential around center
+   const real tmp = EXP( -SQR(r)/SQR(eps) );
+   const real _r3 = ( eps <= (real)0.0 ) ? (real)1.0/CUBE(r) : POW( SQR(r)+SQR(eps)*tmp, (real)-1.5 )*( (real)1.0 - tmp );
 
 
+   const real   force          = FourPiGrho * CUBE(Rs) * ( LOG( 1.0 + r / Rs )  - r / (Rs + r)  );
+    
+   Acc[0] = -force*_r3*dx;
+   Acc[1] = -force*_r3*dy;
+   Acc[2] = -force*_r3*dz;
+}
+#endif // #ifdef EXTERNAL_NFW_POTENTIAL
 
 #endif // #ifdef GRAVITY

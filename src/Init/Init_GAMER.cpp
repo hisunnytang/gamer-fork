@@ -65,6 +65,10 @@ void Init_GAMER( int *argc, char ***argv )
    if ( GRACKLE_ACTIVATE )    Grackle_Init();
 #  endif
 
+// initialize Dengo
+#  ifdef SUPPORT_DENGO
+   if ( DENGO_ACTIVATE )    Dengo_Init();
+#  endif
 
 // initialize parameters for the parallelization (rectangular domain decomposition)
    Init_Parallelization();

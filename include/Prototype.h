@@ -558,6 +558,19 @@ void Grackle_AdvanceDt( const int lv, const double TimeNew, const double TimeOld
 void CPU_GrackleSolver( grackle_field_data *Che_FieldData, code_units Che_Units, const int NPatchGroup, const real dt );
 #endif // #ifdef SUPPORT_GRACKLE
 
+// Dengo
+#ifdef SUPPORT_DENGO
+void Dengo_Init();
+void Dengo_Init_FieldData();
+void Dengo_End();
+void Init_MemAllocate_Dengo( const int Che_NPG );
+void End_MemFree_Dengo();
+void Dengo_Prepare( const int lv, real h_Che_Array[], const int NPG, const int *PID0_List );
+void Dengo_Close( const int lv, const int SaveSg, const real h_Che_Array[], const int NPG, const int *PID0_List );
+void Dengo_AdvanceDt( const int lv, const double TimeNew, const double TimeOld, const double dt, const int SaveSg,
+                        const bool OverlapMPI, const bool Overlap_Sync );
+void CPU_DengoSolver( dengo_field_data *Che_FieldData, code_units Che_Units, const int NPatchGroup, const real dt );
+#endif // #ifdef SUPPORT_DENGO
 
 // star formation
 #ifdef STAR_FORMATION

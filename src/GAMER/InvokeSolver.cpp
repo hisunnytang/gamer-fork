@@ -40,19 +40,20 @@ extern Timer_t *Timer_Poi_PrePot_F[NLEVEL];
 //                                   GRAVITY_SOLVER             : Gravity solver
 //                                   POISSON_AND_GRAVITY_SOLVER : Poisson + Gravity solvers
 //                                   GRACKLE_SOLVER             : Grackle solver
+//                                   DENGO_SOLVER               : Dengo solver
 //                                   DT_FLU_SOLVER              : dt solver for fluid
 //                                   DT_GRA_SOLVER              : dt solver for gravity
 //                lv           : Target refinement level
 //                TimeNew      : Target physical time to reach
 //                TimeOld      : Physical time before update
-//                               --> For the Fluid, Gravity, and Grackle solvers, this function updates physical time from
+//                               --> For the Fluid, Gravity, and Grackle/Dengo solvers, this function updates physical time from
 //                                   TimeOld to TimeNew
 //                               --> For the Poisson solver, this function calculates potential at **TimeNew**
 //                               --> For the dt solver, this function estimates dt at **TimeNew**
 //                dt           : Time interval to advance solution for the fluid and gravity solvers
 //                               (can be different from TimeNew-TimeOld if COMOVING is on)
 //                Poi_Coeff    : Coefficient in front of the RHS in the Poisson eq.
-//                SaveSg_Flu   : Sandglass to store the updated fluid data (for the fluid, gravity, and Grackle solvers)
+//                SaveSg_Flu   : Sandglass to store the updated fluid data (for the fluid, gravity, and Grackle /Dengo solvers)
 //                SaveSg_Pot   : Sandglass to store the updated potential data (for the Poisson solver only)
 //                OverlapMPI   : true --> Overlap MPI time with CPU/GPU computation
 //                Overlap_Sync : true  --> Advance the patches which cannot be overlapped with MPI communication
@@ -86,6 +87,11 @@ void InvokeSolver( const Solver_t TSolver, const int lv, const double TimeNew, c
       Aux_Error( ERROR_INFO, "incorrect SaveSg_Flu (%d) !!\n", SaveSg_Flu );
 #  endif
 
+#  ifdef SUPPORT_DENGO
+   if (  TSolver == DENGO_SOLVER  && ( SaveSg_Flu != 0 && SaveSg_Flu != 1 )  )
+      Aux_Error( ERROR_INFO, "incorrect SaveSg_Flu (%d) !!\n", SaveSg_Flu );
+#  endif
+
 
 // set the maximum number of patch groups to be updated at a time
    int NPG_Max;
@@ -102,6 +108,10 @@ void InvokeSolver( const Solver_t TSolver, const int lv, const double TimeNew, c
 
 #     ifdef SUPPORT_GRACKLE
       case GRACKLE_SOLVER:             NPG_Max = CHE_GPU_NPGROUP;    break;
+#     endif
+
+#     ifdef SUPPORT_DENGO
+      case DENGO_SOLVER:               NPG_Max = CHE_GPU_NPGROUP;    break;
 #     endif
 
 //    currently we use FLU_GPU_NPGROUP and POT_GPU_NPGROUP for the dt solvers
@@ -253,6 +263,7 @@ void InvokeSolver( const Solver_t TSolver, const int lv, const double TimeNew, c
 //                                GRAVITY_SOLVER             : Gravity solver
 //                                POISSON_AND_GRAVITY_SOLVER : Poisson + Gravity solvers
 //                                GRACKLE_SOLVER             : Grackle solver
+//                                DENGO_SOLVER               : Dengo solver
 //                                DT_FLU_SOLVER              : dt solver for fluid
 //                                DT_GRA_SOLVER              : dt solver for gravity
 //                lv        : Target refinement level
@@ -262,7 +273,7 @@ void InvokeSolver( const Solver_t TSolver, const int lv, const double TimeNew, c
 //                            --> For Gravity solver, it prepares data at TimeNew
 //                                (TimeOld data will also prepared for UNSPLIT_GRAVITY)
 //                                For Poisson solver, it prepares data at TimeNew
-//                            --> For Grackle solver, it prepares data at TimeNew
+//                            --> For Grackle / Dengo solver, it prepares data at TimeNew
 //                                --> Specifically, it always prepares data at the current FluSg[lv]
 //                NPG       : Number of patch groups to be prepared at a time
 //                PID0_List : List recording the patch indicies with LocalID==0 to be udpated
@@ -347,6 +358,12 @@ void Preparation_Step( const Solver_t TSolver, const int lv, const double TimeNe
       break;
 #     endif
 
+#     ifdef SUPPORT_DENGO
+      case DENGO_SOLVER :
+         Dengo_Prepare( lv, h_Che_Array[ArrayID], NPG, PID0_List );
+      break;
+#     endif
+
       case DT_FLU_SOLVER:
          dt_Prepare_Flu( lv, h_Flu_Array_T[ArrayID], NPG, PID0_List );
       break;
@@ -387,7 +404,7 @@ void Preparation_Step( const Solver_t TSolver, const int lv, const double TimeNe
 //                TimeOld   : Physical time before update   (only useful for adding external potential with UNSPLIT_GRAVITY)
 //                NPG       : Number of patch groups to be updated at a time
 //                ArrayID   : Array index to load and store data ( 0 or 1 )
-//                dt        : Time interval to advance solution (for the fluid, gravity, and Grackle solvers)
+//                dt        : Time interval to advance solution (for the fluid, gravity, and Grackle/ Dengo solvers)
 //                Poi_Coeff : Coefficient in front of the RHS in the Poisson eq.
 //-------------------------------------------------------------------------------------------------------
 void Solver( const Solver_t TSolver, const int lv, const double TimeNew, const double TimeOld,
@@ -571,6 +588,13 @@ void Solver( const Solver_t TSolver, const int lv, const double TimeNew, const d
       break;
 #     endif // #ifdef SUPPORT_GRACKLE
 
+#     ifdef SUPPORT_DENGO
+      case DENGO_SOLVER :
+         CPU_DengoSolver( Che_FieldData, Che_Units, NPG, dt );
+
+      break;
+#     endif // #ifdef SUPPORT_DENGO
+
 
 #     if   ( MODEL == HYDRO )
       case DT_FLU_SOLVER:
@@ -634,10 +658,11 @@ void Solver( const Solver_t TSolver, const int lv, const double TimeNew, const d
 //                                 GRAVITY_SOLVER             : Gravity solver
 //                                 POISSON_AND_GRAVITY_SOLVER : Poisson + Gravity solvers
 //                                 GRACKLE_SOLVER             : Grackle solver
+//                                 DENGO_SOLVER               : Dengo solver
 //                                 DT_FLU_SOLVER              : dt solver for fluid
 //                                 DT_GRA_SOLVER              : dt solver for gravity
 //                lv         : Target refinement level
-//                SaveSg_Flu : Sandglass to store the updated fluid data (for both the fluid, gravity, and Grackle solvers)
+//                SaveSg_Flu : Sandglass to store the updated fluid data (for both the fluid, gravity, and Grackle/Dengo solvers)
 //                SaveSg_Pot : Sandglass to store the updated potential data (for the Poisson solver)
 //                NPG        : Number of patch groups to be evaluated at a time
 //                PID0_List  : List recording the patch indicies with LocalID==0 to be udpated
@@ -682,6 +707,12 @@ void Closing_Step( const Solver_t TSolver, const int lv, const int SaveSg_Flu, c
 #     ifdef SUPPORT_GRACKLE
       case GRACKLE_SOLVER :
          Grackle_Close( lv, SaveSg_Flu, h_Che_Array[ArrayID], NPG, PID0_List );
+      break;
+#     endif
+
+#     ifdef SUPPORT_DENGO
+      case DENGO_SOLVER :
+         Dengo_Close( lv, SaveSg_Flu, h_Che_Array[ArrayID], NPG, PID0_List );
       break;
 #     endif
 

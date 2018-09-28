@@ -187,6 +187,14 @@ void Init_Load_Parameter()
 #  endif
 
 
+// Dengo
+#  ifdef SUPPORT_DENGO
+   ReadPara->Add( "DENGO_ACTIVATE",           &DENGO_ACTIVATE,                true,            Useless_bool,  Useless_bool   );
+// do not check CHE_GPU_NPGROUP since it may be reset by either Init_ResetDefaultParameter() or CUAPI_Set_Default_GPU_Parameter()
+   ReadPara->Add( "CHE_GPU_NPGROUP",            &CHE_GPU_NPGROUP,                -1,               NoMin_int,     NoMax_int      );
+#  endif
+
+
 // star formation
 #  ifdef STAR_FORMATION
    ReadPara->Add( "SF_CREATE_STAR_SCHEME",         &SF_CREATE_STAR_SCHEME,         0,              0,             1              );

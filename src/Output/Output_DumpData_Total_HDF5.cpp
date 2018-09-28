@@ -1401,6 +1401,13 @@ void FillIn_Makefile( Makefile_t &Makefile )
    Makefile.SupportGrackle         = 0;
 #  endif
 
+#  ifdef SUPPORT_DENGO
+   Makefile.SupportDengo         = 1;
+#  else
+   Makefile.SupportDengo         = 0;
+#  endif
+
+
    Makefile.RandomNumber           = RANDOM_NUMBER;
 
    Makefile.NLevel                 = NLEVEL;
@@ -1897,6 +1904,13 @@ void FillIn_InputPara( InputPara_t &InputPara )
    InputPara.Che_GPU_NPGroup         = CHE_GPU_NPGROUP;
 #  endif
 
+// Dengo
+#  ifdef SUPPORT_DENGO
+   InputPara.Dengo_Activate          = DENGO_ACTIVATE;
+   InputPara.Che_GPU_NPGroup         = CHE_GPU_NPGROUP;
+#  endif
+
+
 // star formation
 #  ifdef STAR_FORMATION
    InputPara.SF_CreateStar_Scheme       = SF_CREATE_STAR_SCHEME;
@@ -2146,6 +2160,7 @@ void GetCompound_Makefile( hid_t &H5_TypeID )
    H5Tinsert( H5_TypeID, "SupportHDF5",            HOFFSET(Makefile_t,SupportHDF5            ), H5T_NATIVE_INT );
    H5Tinsert( H5_TypeID, "SupportGSL",             HOFFSET(Makefile_t,SupportGSL             ), H5T_NATIVE_INT );
    H5Tinsert( H5_TypeID, "SupportGrackle",         HOFFSET(Makefile_t,SupportGrackle         ), H5T_NATIVE_INT );
+   H5Tinsert( H5_TypeID, "SupportDengo",           HOFFSET(Makefile_t,SupportDengo           ), H5T_NATIVE_INT );
    H5Tinsert( H5_TypeID, "RandomNumber",           HOFFSET(Makefile_t,RandomNumber           ), H5T_NATIVE_INT );
 
    H5Tinsert( H5_TypeID, "NLevel",                 HOFFSET(Makefile_t,NLevel                 ), H5T_NATIVE_INT );
@@ -2581,6 +2596,12 @@ void GetCompound_InputPara( hid_t &H5_TypeID )
    H5Tinsert( H5_TypeID, "Grackle_PE_Heating",      HOFFSET(InputPara_t,Grackle_PE_Heating     ), H5T_NATIVE_INT     );
    H5Tinsert( H5_TypeID, "Grackle_PE_HeatingRate",  HOFFSET(InputPara_t,Grackle_PE_HeatingRate ), H5T_NATIVE_DOUBLE  );
    H5Tinsert( H5_TypeID, "Grackle_CloudyTable",     HOFFSET(InputPara_t,Grackle_CloudyTable    ), H5_TypeID_VarStr   );
+   H5Tinsert( H5_TypeID, "Che_GPU_NPGroup",         HOFFSET(InputPara_t,Che_GPU_NPGroup        ), H5T_NATIVE_INT     );
+#  endif
+
+// Dengo
+#  ifdef SUPPORT_DENGO
+   H5Tinsert( H5_TypeID, "Dengo_Activate",          HOFFSET(InputPara_t,Dengo_Activate         ), H5T_NATIVE_INT     );
    H5Tinsert( H5_TypeID, "Che_GPU_NPGroup",         HOFFSET(InputPara_t,Che_GPU_NPGroup        ), H5T_NATIVE_INT     );
 #  endif
 

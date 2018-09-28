@@ -199,6 +199,13 @@ extern char            GRACKLE_CLOUDY_TABLE[MAX_STRING];
 extern int             CHE_GPU_NPGROUP;
 #endif
 
+// (2-7) Dengo
+// ============================================================================================================
+#ifdef SUPPORT_DENGO
+extern bool            DENGO_ACTIVATE;
+extern int             CHE_GPU_NPGROUP;
+#endif
+
 
 // (2-8) star formation
 // ============================================================================================================
@@ -250,6 +257,16 @@ extern grackle_field_data *Che_FieldData;
 extern code_units Che_Units;
 #endif
 #endif
+
+#ifdef SUPPORT_DENGO
+extern real       (*h_Che_Array      [2]);
+// do not declare Dengo variables for CUDA source files since they do not include <dengo.h>
+#ifndef __CUDACC__
+extern dengo_field_data *Che_FieldData;
+extern code_units Che_Units;
+#endif
+#endif
+
 
 extern real        *h_dt_Array_T[2];
 extern real       (*h_Flu_Array_T[2])[NCOMP_FLUID][ CUBE(PS1) ];

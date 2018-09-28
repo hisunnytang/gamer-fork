@@ -175,7 +175,7 @@ int CUPOT_PoissonSolver_SetConstMem();
 // Parameter   :  GPU_NStream     : Number of streams for the asynchronous memory copy in GPU
 //                Flu_GPU_NPGroup : Number of patch groups sent into GPU simultaneously for the fluid solver
 //                Pot_GPU_NPGroup : Number of patch groups sent into GPU simultaneously for the Poisson solver
-//                Che_GPU_NPGroup : Number of patch groups sent into GPU simultaneously for the Grackle solver
+//                Che_GPU_NPGroup : Number of patch groups sent into GPU simultaneously for the Grackle/ Dengo solver
 //-------------------------------------------------------------------------------------------------------
 void CUAPI_Set_Default_GPU_Parameter( int &GPU_NStream, int &Flu_GPU_NPGroup, int &Pot_GPU_NPGroup, int &Che_GPU_NPGroup )
 {
@@ -338,6 +338,28 @@ void CUAPI_Set_Default_GPU_Parameter( int &GPU_NStream, int &Flu_GPU_NPGroup, in
    } // if ( Che_GPU_NPGroup <= 0 )
 #  endif
 
+#  ifdef SUPPORT_DENGO
+   if ( Che_GPU_NPGroup <= 0 )
+   {
+#     if   ( GPU_ARCH == FERMI )
+      Che_GPU_NPGroup = 1*GPU_NStream*DeviceProp.multiProcessorCount;
+#     elif ( GPU_ARCH == KEPLER )
+      Che_GPU_NPGroup = 1*GPU_NStream*DeviceProp.multiProcessorCount;
+#     elif ( GPU_ARCH == MAXWELL )
+      Che_GPU_NPGroup = 1*GPU_NStream*DeviceProp.multiProcessorCount;
+#     elif ( GPU_ARCH == PASCAL )
+      Che_GPU_NPGroup = 1*GPU_NStream*DeviceProp.multiProcessorCount;
+#     elif ( GPU_ARCH == VOLTA )
+      Che_GPU_NPGroup = 1*GPU_NStream*DeviceProp.multiProcessorCount;
+#     else
+#     error : UNKNOWN GPU_ARCH !!
+#     endif
+
+      if ( MPI_Rank == 0 )
+         Aux_Message( stdout, "NOTE : parameter \"%s\" is set to the default value = %d"
+                              " --> might be further fine-tuned\n", "CHE_GPU_NPGROUP", Che_GPU_NPGroup );
+   } // if ( Che_GPU_NPGroup <= 0 )
+#  endif // #ifdef SUPPORT_DENGO
 
 // (3) cache preference
 // (3-1) fluid solver

@@ -36,7 +36,7 @@ COMPILE_VERBOSE := 0
 SIMU_OPTION += -DMODEL=HYDRO
 
 # enable gravity
-#SIMU_OPTION += -DGRAVITY
+SIMU_OPTION += -DGRAVITY
 
 # enable particles
 # --> must enable GRAVITY
@@ -47,6 +47,10 @@ SIMU_OPTION += -DMODEL=HYDRO
 # --> please enable OpenMP when compiling Grackle (by "make omp-on")
 #SIMU_OPTION += -DSUPPORT_GRACKLE
 
+# support Dengo, a chemistry and radiative cooling library
+# --> must set NCOMP_PASSIVE_USER according to the primordial chemistry network (for now lets just do 9-species)
+# --> please enable OpenMP when compiling Dengo 
+SIMU_OPTION += -DSUPPORT_DENGO
 
 # (b) options of different physical modules
 # (b-1) hydro options
@@ -66,12 +70,14 @@ SIMU_OPTION += -DRSOLVER=ROE
 
 # dual energy formalism: DE_ENPY/DE_EINT (evolve entropy or internal energy)
 # --> DE_EINT is not supported yet; useless for RTVD/WAF
-#SIMU_OPTION += -DDUAL_ENERGY=DE_ENPY
+SIMU_OPTION += -DDUAL_ENERGY=DE_ENPY
 
 # number of user-defined passively advected scalars
 # --> set it to 0 or comment it out if none is required
 # --> useless for RTVD/WAF
-SIMU_OPTION += -DNCOMP_PASSIVE_USER=0
+#
+# for GRACKLE PRIMORDIAL_CHEMISTRY = 2, 9-species
+SIMU_OPTION += -DNCOMP_PASSIVE_USER=9
 
 
 # (b-2) MHD options
@@ -94,7 +100,7 @@ SIMU_OPTION += -DLAPLACIAN_4TH
 
 # number of passively advected scalars
 # --> not supported yet and must be set to 0 (or comment it out)
-SIMU_OPTION += -DNCOMP_PASSIVE_USER=0
+#SIMU_OPTION += -DNCOMP_PASSIVE_USER=0
 
 endif # MODEL
 
@@ -152,10 +158,10 @@ SIMU_OPTION += -DMAX_PATCH=1000000
 #SIMU_OPTION += -DGPU
 
 # GPU architecture: FERMI/KEPLER/MAXWELL/PASCAL/VOLTA
-SIMU_OPTION += -DGPU_ARCH=KEPLER
+#SIMU_OPTION += -DGPU_ARCH=KEPLER
 
 # debug mode
-#SIMU_OPTION += -DGAMER_DEBUG
+SIMU_OPTION += -DGAMER_DEBUG
 
 # bitwise reproducibility
 #SIMU_OPTION += -DBITWISE_REPRODUCIBILITY
@@ -168,7 +174,7 @@ SIMU_OPTION += -DTIMING
 #SIMU_OPTION += -DTIMING_SOLVER
 
 # double precision
-#SIMU_OPTION += -DFLOAT8
+SIMU_OPTION += -DFLOAT8
 
 # serial mode (in which no MPI libraries are required)
 # --> must disable LOAD_BALANCE
@@ -189,7 +195,7 @@ SIMU_OPTION += -DOPENMP
 #SIMU_OPTION += -DLAOHU
 
 # support HDF5 format
-#SIMU_OPTION += -DSUPPORT_HDF5
+SIMU_OPTION += -DSUPPORT_HDF5
 
 # support GNU scientific library
 #SIMU_OPTION += -DSUPPORT_GSL
@@ -203,6 +209,7 @@ SIMU_OPTION += -DOPENMP
 SIMU_OPTION += -DRANDOM_NUMBER=RNG_GNU_EXT
 
 
+SIMU_OPTION += -DEXTERNAL_NFW_POTENTIAL
 
 
 
@@ -236,10 +243,10 @@ SIMU_OPTION += -DRANDOM_NUMBER=RNG_GNU_EXT
 # gnu
 # -------------------------------------------------------------------------------
  CXX         = g++                                       # serial compiler
-#CXX         = $(MPI_PATH)/bin/mpicxx                    # MPI compiler
+# CXX         = /home/kwoksun2/anaconda2/bin/mpicxx                    # MPI compiler
 #CXX         = CC                                        # cray wrapper script
- CXXFLAG     = -g -O3                                    # general flags
-#CXXFLAG     = -g -O3 -std=c++11
+#CXXFLAG     = -g -O3                                    # general flags
+CXXFLAG     = -g -O3 -std=c++11
 #CXXFLAG     = -g -Ofast
  CXXFLAG    += -Wall -Wextra                             # warning flags
  CXXFLAG    += -Wno-unused-variable -Wno-unused-parameter \
@@ -261,7 +268,7 @@ endif
 
 # CUDA
 # -------------------------------------------------------------------------------
- NVCC = $(CUDA_PATH)/bin/nvcc                            # CUDA compiler
+#NVCC = $(CUDA_PATH)/bin/nvcc                            # CUDA compiler
 #NVCC = $(CUDA_PATH)/bin/nvcc -ccbin YOUR_G++            # with a specified host compiler
 #NVCC = nvcc -ccbin CC                                   # for the Cray environment
 
@@ -274,10 +281,11 @@ endif
 
 # template
 CUDA_PATH    :=
-FFTW_PATH    :=
-MPI_PATH     :=
-HDF5_PATH    :=
-GRACKLE_PATH :=
+FFTW_PATH    := /home/kwoksun2/fftw-2.1.5/fftw2_install
+MPI_PATH     := /home/kwoksun2/anaconda2/lib
+HDF5_PATH    := /home/kwoksun2/anaconda2
+GRACKLE_PATH := /home/kwoksun2/grackle_install
+DENGO_PATH   := /home/kwoksun2/dengo_install
 GSL_PATH     :=
 LIBYT_PATH   :=
 
@@ -594,6 +602,18 @@ CC_FILE     += Grackle_Init.cpp  Grackle_End.cpp  Init_MemAllocate_Grackle.cpp  
 vpath %.cpp    Grackle  Grackle/CPU_Grackle
 endif # SUPPORT_GRACKLE
 
+# Dengo source files (included only if "SUPPORT_DENGO" is turned on)
+# ------------------------------------------------------------------------------------
+ifeq "$(filter -DSUPPORT_DENGO, $(SIMU_OPTION))" "-DSUPPORT_DENGO"
+CC_FILE     += CPU_DengoSolver.cpp
+
+CC_FILE     += Dengo_Init.cpp  Dengo_End.cpp  Init_MemAllocate_Dengo.cpp  End_MemFree_Dengo.cpp \
+               Dengo_Prepare.cpp  Dengo_Close.cpp  Dengo_Init_FieldData.cpp  Dengo_AdvanceDt.cpp
+
+vpath %.cpp    Dengo  Dengo/CPU_Dengo
+endif # SUPPORT_DENGO
+
+
 
 # star formation source files (included only if "STAR_FORMATION" is turned on)
 # ------------------------------------------------------------------------------------
@@ -658,8 +678,13 @@ ifeq "$(filter -DSUPPORT_GRACKLE, $(SIMU_OPTION))" "-DSUPPORT_GRACKLE"
 LIB += -L$(GRACKLE_PATH)/lib -lgrackle
 endif
 
+ifeq "$(filter -DSUPPORT_DENGO, $(SIMU_OPTION))" "-DSUPPORT_DENGO"
+LIB += -L$(DENGO_PATH)/lib -ldengo
+endif
+
+
 ifeq "$(filter -DSUPPORT_HDF5, $(SIMU_OPTION))" "-DSUPPORT_HDF5"
-LIB += -L$(HDF5_PATH)/lib -lhdf5
+LIB += -lhdf5
 endif
 
 ifeq "$(filter -DSUPPORT_GSL, $(SIMU_OPTION))" "-DSUPPORT_GSL"
@@ -687,8 +712,14 @@ ifeq "$(filter -DSUPPORT_GRACKLE, $(SIMU_OPTION))" "-DSUPPORT_GRACKLE"
 INCLUDE += -I$(GRACKLE_PATH)/include
 endif
 
+ifeq "$(filter -DSUPPORT_DENGO, $(SIMU_OPTION))" "-DSUPPORT_DENGO"
+INCLUDE += -I$(DENGO_PATH)/include 
+INCLUDE += -I/home/kwoksun2/cvode-3.1.0/instdir/include
+endif
+
+
 ifeq "$(filter -DSUPPORT_HDF5, $(SIMU_OPTION))" "-DSUPPORT_HDF5"
-INCLUDE += -I$(HDF5_PATH)/include
+INCLUDE += #-I$(HDF5_PATH)/include
 endif
 
 ifeq "$(filter -DSUPPORT_GSL, $(SIMU_OPTION))" "-DSUPPORT_GSL"

@@ -39,6 +39,9 @@ void End_GAMER()
    Grackle_End();
 #  endif
 
+#  ifdef SUPPORT_DENGO
+   Dengo_End();
+#  endif
 
    if ( MPI_Rank == 0 )
    {

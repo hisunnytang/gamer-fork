@@ -46,6 +46,7 @@ const TestProbID_t
    TESTPROB_HYDRO_COLLIDING_JETS               =   10,
    TESTPROB_HYDRO_PLUMMER                      =   11,
    TESTPROB_HYDRO_GRAVITY                      =   12,
+   TESTPROB_HYDRO_GRACKLE_NON_EQUIL            =   13,
 
    TESTPROB_ELBDM_EXTPOT                       = 1000;
 
@@ -187,6 +188,9 @@ const Solver_t
 #endif
 #ifdef SUPPORT_GRACKLE
   ,GRACKLE_SOLVER             = 4
+#endif
+#ifdef SUPPORT_DENGO
+  ,DENGO_SOLVER               = 4
 #endif
   ,DT_FLU_SOLVER              = 5
 #ifdef GRAVITY

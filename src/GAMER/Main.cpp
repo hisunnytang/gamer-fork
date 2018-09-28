@@ -177,6 +177,14 @@ char                 GRACKLE_CLOUDY_TABLE[MAX_STRING];
 int                  CHE_GPU_NPGROUP;
 #endif
 
+// (2-7) Dengo
+#ifdef SUPPORT_DENGO
+bool                 DENGO_ACTIVATE;
+int                  CHE_GPU_NPGROUP;
+#endif
+
+
+
 // (2-8) star formation
 #ifdef STAR_FORMATION
 SF_CreateStarScheme_t SF_CREATE_STAR_SCHEME;
@@ -226,6 +234,14 @@ real (*h_Che_Array[2])                                                     = { N
 grackle_field_data *Che_FieldData                                          = NULL;
 code_units Che_Units;
 #endif
+
+// (3-4) Dengo chemistry
+#ifdef SUPPORT_DENGO
+real (*h_Che_Array[2])                                                     = { NULL, NULL };
+dengo_field_data *Che_FieldData                                            = NULL;
+code_units Che_Units;
+#endif
+
 
 // (3-5) dt solver
 real  *h_dt_Array_T[2]                                                     = { NULL, NULL };

@@ -108,6 +108,7 @@ struct Makefile_t
    int SupportHDF5;
    int SupportGSL;
    int SupportGrackle;
+   int SupportDengo;
    int RandomNumber;
 
 #  ifdef GRAVITY
@@ -482,6 +483,12 @@ struct InputPara_t
    int    Grackle_PE_Heating;
    double Grackle_PE_HeatingRate;
    char  *Grackle_CloudyTable;
+   int    Che_GPU_NPGroup;
+#  endif
+
+   // Dengo
+#  ifdef SUPPORT_DENGO
+   int    Dengo_Activate;
    int    Che_GPU_NPGroup;
 #  endif
 

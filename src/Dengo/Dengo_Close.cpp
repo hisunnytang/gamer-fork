@@ -147,9 +147,9 @@ void Dengo_Close( const int lv, const int SaveSg, const real h_Che_Array[], cons
 
 //          12-species network
 //            if ( DENGO_PRIMORDIAL >= DENGO_PRI_CHE_NSPE12 ) {
-            *( fluid[Idx_DI   ][0][0] + idx_p ) = Ptr_DI   [idx_pg];
-            *( fluid[Idx_DII  ][0][0] + idx_p ) = Ptr_DII  [idx_pg];
-            *( fluid[Idx_HDI  ][0][0] + idx_p ) = Ptr_HDI  [idx_pg];
+//            *( fluid[Idx_DI   ][0][0] + idx_p ) = Ptr_DI   [idx_pg];
+//            *( fluid[Idx_DII  ][0][0] + idx_p ) = Ptr_DII  [idx_pg];
+//            *( fluid[Idx_HDI  ][0][0] + idx_p ) = Ptr_HDI  [idx_pg];
 //            }
 
             idx_pg ++;

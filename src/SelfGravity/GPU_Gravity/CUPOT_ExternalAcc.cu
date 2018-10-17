@@ -91,10 +91,7 @@ void   CPU_ExternalAcc( real Acc[], const double x, const double y, const double
    const real   eps            = (real)UserArray[5] ;
 
    // soften the potential around center
-   const real tmp = EXP( -SQR(r)/SQR(eps) );
-   const real _r3 = ( eps <= (real)0.0 ) ? (real)1.0/CUBE(r) : POW( SQR(r)+SQR(eps)*tmp, (real)-1.5 )*( (real)1.0 - tmp );
-
-
+   const real _r3 = ( eps <= (real)0.0 ) ? (real)1.0/CUBE(r) : POW( SQR(r)+SQR(eps), (real)-1.5 );
    const real   force          = FourPiGrho * CUBE(Rs) * ( LOG( 1.0 + r / Rs )  - r / (Rs + r)  );
     
    Acc[0] = -force*_r3*dx;

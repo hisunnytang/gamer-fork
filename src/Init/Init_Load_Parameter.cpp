@@ -189,7 +189,9 @@ void Init_Load_Parameter()
 
 // Dengo
 #  ifdef SUPPORT_DENGO
-   ReadPara->Add( "DENGO_ACTIVATE",           &DENGO_ACTIVATE,                true,            Useless_bool,  Useless_bool   );
+   ReadPara->Add( "DENGO_ACTIVATE",            &DENGO_ACTIVATE,                true,            Useless_bool,  Useless_bool   );
+   ReadPara->Add( "DENGO_DATA_FILE",      DENGO_DATA_FILE,            Useless_str,     Useless_str,   Useless_str    );
+// do not check CHE_GPU_NPGROUP since it may be reset by either Init_ResetDefaultParameter() or CUAPI_Set_Default_GPU_Parameter()
 // do not check CHE_GPU_NPGROUP since it may be reset by either Init_ResetDefaultParameter() or CUAPI_Set_Default_GPU_Parameter()
    ReadPara->Add( "CHE_GPU_NPGROUP",            &CHE_GPU_NPGROUP,                -1,               NoMin_int,     NoMax_int      );
 #  endif

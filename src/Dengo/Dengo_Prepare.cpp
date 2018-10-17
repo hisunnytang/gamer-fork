@@ -233,20 +233,20 @@ void Dengo_Prepare( const int lv, real h_Che_Array[], const int NPG, const int *
 //   Che_FieldData->grid_dx         = amr->dh[lv];
 
    Che_FieldData->density         = Ptr_Dens0;
-   Che_FieldData->ge_density = Ptr_sEint0;
+   Che_FieldData->ge_density      = Ptr_sEint0;
 
    //if ( DENGO_PRIMORDIAL >= DENGO_PRI_CHE_NSPE6 ) {
-   Che_FieldData->de_density       = Ptr_e0;
-   Che_FieldData->H_1_density      = Ptr_HI0;
+   Che_FieldData->de_density      = Ptr_e0;
+   Che_FieldData->H_1_density     = Ptr_HI0;
    Che_FieldData->H_2_density     = Ptr_HII0;
-   Che_FieldData->He_1_density     = Ptr_HeI0;
+   Che_FieldData->He_1_density    = Ptr_HeI0;
    Che_FieldData->He_2_density    = Ptr_HeII0;
-   Che_FieldData->He_3_density   = Ptr_HeIII0;
+   Che_FieldData->He_3_density    = Ptr_HeIII0;
    //}
 
    //if ( DENGO_PRIMORDIAL >= DENGO_PRI_CHE_NSPE9 ) {
-   Che_FieldData->H_m0_density      = Ptr_HM0;
-   Che_FieldData->H2_1_density     = Ptr_H2I0;
+   Che_FieldData->H_m0_density    = Ptr_HM0;
+   Che_FieldData->H2_1_density    = Ptr_H2I0;
    Che_FieldData->H2_2_density    = Ptr_H2II0;
    //}
 

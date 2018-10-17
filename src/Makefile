@@ -171,7 +171,7 @@ SIMU_OPTION += -DTIMING
 
 # measure the wall-clock time of GPU solvers (will disable CPU/GPU overlapping)
 # --> must enable TIMING
-#SIMU_OPTION += -DTIMING_SOLVER
+SIMU_OPTION += -DTIMING_SOLVER
 
 # double precision
 SIMU_OPTION += -DFLOAT8

@@ -22,8 +22,7 @@ void CPU_DengoSolver( dengo_field_data *Che_FieldData, code_units Che_Units, con
 
 // set grid_dimension, grid_start, and grid_end
     
-   Che_FieldData->nstrip = CUBE(PS2) * NPatchGroup;
-   fprintf(stderr, "Che_FieldData->nstrip: %d \n", CUBE(PS2) * NPatchGroup);
+   Che_FieldData->ncells = (unsigned long int) CUBE(PS2) * NPatchGroup;
 
 // invoke Dengo
 // --> note that we use the OpenMP implementation in Dengo directly, which applies the parallelization to the first two

@@ -180,6 +180,7 @@ int                  CHE_GPU_NPGROUP;
 // (2-7) Dengo
 #ifdef SUPPORT_DENGO
 bool                 DENGO_ACTIVATE;
+char                 DENGO_DATA_FILE[MAX_STRING];
 int                  CHE_GPU_NPGROUP;
 #endif
 

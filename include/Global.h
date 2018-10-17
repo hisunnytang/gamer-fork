@@ -203,6 +203,7 @@ extern int             CHE_GPU_NPGROUP;
 // ============================================================================================================
 #ifdef SUPPORT_DENGO
 extern bool            DENGO_ACTIVATE;
+extern char            DENGO_DATA_FILE[MAX_STRING];
 extern int             CHE_GPU_NPGROUP;
 #endif
 

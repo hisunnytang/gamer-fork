@@ -16,6 +16,7 @@ static double MolecularHydrogenMassFrac;
 static double NFW_Rho;
 static double NFW_Rs;
 static double smoothing_length;
+static double gas_Rs;
 // =======================================================================================
 
 
@@ -126,6 +127,7 @@ void SetParameter()
    ReadPara->Add( "NFW_Rho",           &NFW_Rho,               -1.0,          Eps_double,        NoMax_double      );
    ReadPara->Add( "NFW_Rs",            &NFW_Rs,                -1.0,          Eps_double,        NoMax_double      );
    ReadPara->Add( "smoothing_length",  &smoothing_length,      -1.0,          Eps_double,        NoMax_double      );
+   ReadPara->Add( "gas_Rs",            &gas_Rs,                -1.0,          Eps_double,        NoMax_double      );
 
    ReadPara->Read( FileName );
 
@@ -211,13 +213,26 @@ void SetGridIC( real fluid[], const double x, const double y, const double z, co
    GasTemp = 2000.0;
    GasTemp *= Const_kB / UNIT_E;
    
-   fluid[DENS]  = NFW_Rho * 0.05 * pow( 1.0 + pow( (r / NFW_Rs ) , 2.0) , - 1.5);
+    // ISOTHERMAL gas profile (Yoshida 2006)
+   fluid[DENS]  = NFW_Rho * 0.05 * pow( 1.0 + pow( (r / NFW_Rs ) , 2.0) , - 1);
+    
+   if (r < gas_Rs){
+    fluid[DENS] = NFW_Rho * 0.05;
+   }
+
+   //const double PI          = 3.14159265359;
+   //fluid[DENS]  = sound_speed*sound_speed / 2.0 / PI / NEWTON_G / ( r*r + NFW_Rs*NFW_Rs ) ;  
    fluid[DENS] /= UNIT_D; 
+   
+   // Equilibrium profile assuming the gravity is primarily dominated by Dark Matter!
+   //fluid[DENS]  = NFW_Rho * 0.1 * EXP( -r / NFW_Rs / 1.5 ) ;
+   //fluid[DENS] /= UNIT_D; 
+   
    GasPres = CPU_Temperature2Pressure( fluid[DENS], GasTemp, MOLECULAR_WEIGHT, 
            Const_mH/UNIT_M, CheckMinPres_Yes, MIN_PRES );
-   fluid[ENGY] = GasPres / ( 5.0/3.0 - 1 );  
+   fluid[ENGY] = GasPres / ( GAMMA - 1 );  
 
-   double sound_speed = SQRT( fluid[ENGY] / fluid[DENS] ) ;
+   //double sound_speed = SQRT( fluid[ENGY] / fluid[DENS] ) ;
 
    fluid[MOMX] = 0.0; //fluid[DENS] * sound_speed * ( (double)rand() / (double)RAND_MAX - 0.5);
    fluid[MOMY] = 0.0; //fluid[DENS] * sound_speed * ( (double)rand() / (double)RAND_MAX - 0.5);
@@ -233,7 +248,7 @@ void SetGridIC( real fluid[], const double x, const double y, const double z, co
    fluid[Idx_HeII]  = fluid[DENS]*1e-20;
    fluid[Idx_HeIII] = fluid[DENS]*1e-20;
    fluid[Idx_HM]    = fluid[DENS]*1e-20;
-   fluid[Idx_H2I]   = fluid[DENS]*2.0e-4;
+   fluid[Idx_H2I]   = fluid[DENS]* MolecularHydrogenMassFrac;
    fluid[Idx_H2II]  = fluid[DENS]*1e-20;
    fluid[Idx_e]     = fluid[DENS]*1e-20;
 

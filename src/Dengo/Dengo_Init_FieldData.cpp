@@ -76,6 +76,8 @@ void Dengo_Init_FieldData()
    Che_FieldData->RT_H2_dissociation_rate = NULL;
    Che_FieldData->RT_heating_rate         = NULL;
     */
+    
+   Che_FieldData->dengo_data_file = DENGO_DATA_FILE; 
 
 } // FUNCTION : Dengo_Init_FieldData
 

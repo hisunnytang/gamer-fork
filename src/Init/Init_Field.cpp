@@ -92,6 +92,11 @@ void Init_Field()
    Idx_H2I     = AddField( "H2I",      NORMALIZE_YES );
    Idx_H2II    = AddField( "H2II",     NORMALIZE_YES );
 
+   Idx_MolecularWeight = AddField("Molecular_Weight", NORMALIZE_NO);
+   Idx_Gamma           = AddField("Gamma",            NORMALIZE_NO);
+   Idx_CoolingTime     = AddField("Cooling_Time",     NORMALIZE_NO);
+   Idx_Temperature     = AddField("Dengo_Temperature",NORMALIZE_NO);
+
 #  endif // #ifdef SUPPORT_DENGO
 
 // 3. add user-defined fields

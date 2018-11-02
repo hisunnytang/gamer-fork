@@ -32,7 +32,7 @@ void CPU_DengoSolver( dengo_field_data *Che_FieldData, code_units Che_Units, con
 // cvklu = solver_name
    if ( cvklu_solve_chemistry_dt( &Che_Units, Che_FieldData, dt ) == 1  )
       Aux_Error( ERROR_INFO, "Dengo solve_chemistry() failed !!\n" );
-
+   
 } // FUNCTION : CPU_DengoSolver
 
 

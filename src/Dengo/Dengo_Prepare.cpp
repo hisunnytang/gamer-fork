@@ -18,11 +18,10 @@ extern int CheIdx_HeIII;
 extern int CheIdx_HM;
 extern int CheIdx_H2I;
 extern int CheIdx_H2II;
-extern int CheIdx_DI;
-extern int CheIdx_DII;
-extern int CheIdx_HDI;
-extern int CheIdx_Metal;
-
+extern int CheIdx_CoolingTime;
+extern int CheIdx_Gamma;
+extern int CheIdx_MolecularWeight;
+extern int CheIdx_Temperature;
 
 
 
@@ -96,6 +95,8 @@ void Dengo_Prepare( const int lv, real h_Che_Array[], const int NPG, const int *
    const int  Size1pg         = CUBE(PS2);
    const int  Size1v          = NPG*Size1pg;
 #  ifdef DUAL_ENERGY
+   
+   // HERE FIXED GAMMA FIELD!!!!!!!!!!!
    const real  Gamma_m1       = GAMMA - (real)1.0;
    const real _Gamma_m1       = (real)1.0 / Gamma_m1;
    const bool CheckMinPres_No = false;
@@ -113,12 +114,11 @@ void Dengo_Prepare( const int lv, real h_Che_Array[], const int NPG, const int *
    real *Ptr_HM0    = h_Che_Array + CheIdx_HM   *Size1v;
    real *Ptr_H2I0   = h_Che_Array + CheIdx_H2I  *Size1v;
    real *Ptr_H2II0  = h_Che_Array + CheIdx_H2II *Size1v;
-   real *Ptr_DI0    = h_Che_Array + CheIdx_DI   *Size1v;
-   real *Ptr_DII0   = h_Che_Array + CheIdx_DII  *Size1v;
-   real *Ptr_HDI0   = h_Che_Array + CheIdx_HDI  *Size1v;
-   real *Ptr_Metal0 = h_Che_Array + CheIdx_Metal*Size1v;
-
-
+   // additional hydro info from chemistry solver
+   real *Ptr_CoolingTime0     = h_Che_Array + CheIdx_CoolingTime     * Size1v;
+   real *Ptr_Gamma0           = h_Che_Array + CheIdx_Gamma           * Size1v;
+   real *Ptr_MolecularWeight0 = h_Che_Array + CheIdx_MolecularWeight * Size1v; 
+   real *Ptr_Temperature0     = h_Che_Array + CheIdx_Temperature     * Size1v; 
 #  pragma omp parallel
    {
 
@@ -129,7 +129,10 @@ void Dengo_Prepare( const int lv, real h_Che_Array[], const int NPG, const int *
 
    real *Ptr_Dens=NULL, *Ptr_sEint=NULL, *Ptr_Ek=NULL, *Ptr_e=NULL, *Ptr_HI=NULL, *Ptr_HII=NULL;
    real *Ptr_HeI=NULL, *Ptr_HeII=NULL, *Ptr_HeIII=NULL, *Ptr_HM=NULL, *Ptr_H2I=NULL, *Ptr_H2II=NULL;
-   real *Ptr_DI=NULL, *Ptr_DII=NULL, *Ptr_HDI=NULL, *Ptr_Metal=NULL;
+   real *Ptr_CoolingTime     = NULL;
+   real *Ptr_Gamma           = NULL;
+   real *Ptr_MolecularWeight = NULL;
+   real *Ptr_Temperature     = NULL;
 
 #  pragma omp for schedule( static )
    for (int TID=0; TID<NPG; TID++)
@@ -150,10 +153,12 @@ void Dengo_Prepare( const int lv, real h_Che_Array[], const int NPG, const int *
       Ptr_HM    = Ptr_HM0    + offset;
       Ptr_H2I   = Ptr_H2I0   + offset;
       Ptr_H2II  = Ptr_H2II0  + offset;
-      Ptr_DI    = Ptr_DI0    + offset;
-      Ptr_DII   = Ptr_DII0   + offset;
-      Ptr_HDI   = Ptr_HDI0   + offset;
-      Ptr_Metal = Ptr_Metal0 + offset;
+
+      Ptr_CoolingTime     = Ptr_CoolingTime0     + offset;
+      Ptr_Gamma           = Ptr_Gamma0           + offset;
+      Ptr_MolecularWeight = Ptr_MolecularWeight0 + offset;
+      Ptr_Temperature     = Ptr_Temperature0     + offset;
+
 
       for (int LocalID=0; LocalID<8; LocalID++)
       {
@@ -205,6 +210,11 @@ void Dengo_Prepare( const int lv, real h_Che_Array[], const int NPG, const int *
             Ptr_H2I  [idx_pg] = *( fluid[Idx_H2I  ][0][0] + idx_p );
             Ptr_H2II [idx_pg] = *( fluid[Idx_H2II ][0][0] + idx_p );
             //}
+            
+            Ptr_CoolingTime    [idx_pg] = *(fluid[Idx_CoolingTime    ][0][0] + idx_p);
+            Ptr_Gamma          [idx_pg] = *(fluid[Idx_Gamma          ][0][0] + idx_p);
+            Ptr_MolecularWeight[idx_pg] = *(fluid[Idx_MolecularWeight][0][0] + idx_p);
+            Ptr_Temperature    [idx_pg] = *(fluid[Idx_Temperature    ][0][0] + idx_p);
 
 //          12-species network
             /*
@@ -249,6 +259,14 @@ void Dengo_Prepare( const int lv, real h_Che_Array[], const int NPG, const int *
    Che_FieldData->H2_1_density    = Ptr_H2I0;
    Che_FieldData->H2_2_density    = Ptr_H2II0;
    //}
+   
+   // additional info from the chemistry solver
+   Che_FieldData->CoolingTime        = Ptr_CoolingTime0;
+   Che_FieldData->MolecularWeight    = Ptr_MolecularWeight0;
+   Che_FieldData->Gamma              = Ptr_Gamma0;
+   Che_FieldData->temperature        = Ptr_Temperature0;
+
+
 
 /* if ( DENGO_PRIMORDIAL >= DENGO_PRI_CHE_NSPE12 ) {
    Che_FieldData->DI_density      = Ptr_DI0;

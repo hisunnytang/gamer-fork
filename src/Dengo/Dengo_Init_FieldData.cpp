@@ -47,15 +47,22 @@ void Dengo_Init_FieldData()
    Che_FieldData->density                 = NULL;
    Che_FieldData->ge_density              = NULL;
 //   Che_FieldData->grid_dx                 = NULL_REAL;
-   Che_FieldData->de_density               = NULL;
-   Che_FieldData->H_1_density              = NULL;
+   Che_FieldData->de_density              = NULL;
+   Che_FieldData->H_1_density             = NULL;
    Che_FieldData->H_2_density             = NULL;
-   Che_FieldData->He_1_density             = NULL;
+   Che_FieldData->He_1_density            = NULL;
    Che_FieldData->He_2_density            = NULL;
-   Che_FieldData->He_3_density           = NULL;
-   Che_FieldData->H_m0_density              = NULL;
-   Che_FieldData->H2_1_density             = NULL;
+   Che_FieldData->He_3_density            = NULL;
+   Che_FieldData->H_m0_density            = NULL;
+   Che_FieldData->H2_1_density            = NULL;
    Che_FieldData->H2_2_density            = NULL;
+   
+   Che_FieldData->Gamma                   = NULL;
+   Che_FieldData->CoolingTime             = NULL;
+   Che_FieldData->MolecularWeight         = NULL;
+   Che_FieldData->temperature             = NULL;
+  
+   
    /*
    Che_FieldData->DI_density              = NULL;
    Che_FieldData->DII_density             = NULL;

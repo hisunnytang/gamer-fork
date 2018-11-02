@@ -77,8 +77,10 @@ SIMU_OPTION += -DDUAL_ENERGY=DE_ENPY
 # --> useless for RTVD/WAF
 #
 # for GRACKLE PRIMORDIAL_CHEMISTRY = 2, 9-species
-SIMU_OPTION += -DNCOMP_PASSIVE_USER=9
+#SIMU_OPTION += -DNCOMP_PASSIVE_USER=9
 
+# for DENGO PRIMORDIAL_CHEMISTRY = 2, 9-species + gamma + cooling_time + mean molecular weight
+SIMU_OPTION += -DNCOMP_PASSIVE_USER=13
 
 # (b-2) MHD options
 # ------------------------------------------------------------------------------------

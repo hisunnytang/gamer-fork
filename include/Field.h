@@ -29,7 +29,7 @@ SET_GLOBAL( FieldIdx_t Idx_Enpy,          Idx_Undefined );
 SET_GLOBAL( FieldIdx_t Idx_Eint,          Idx_Undefined );
 #endif
 
-// Grackle fields
+// Grackle / Dengo fields
 SET_GLOBAL( FieldIdx_t Idx_e,             Idx_Undefined );
 SET_GLOBAL( FieldIdx_t Idx_HI,            Idx_Undefined );
 SET_GLOBAL( FieldIdx_t Idx_HII,           Idx_Undefined );
@@ -43,6 +43,12 @@ SET_GLOBAL( FieldIdx_t Idx_DI,            Idx_Undefined );
 SET_GLOBAL( FieldIdx_t Idx_DII,           Idx_Undefined );
 SET_GLOBAL( FieldIdx_t Idx_HDI,           Idx_Undefined );
 SET_GLOBAL( FieldIdx_t Idx_Metal,         Idx_Undefined );
+
+// Extra for Dengo
+SET_GLOBAL( FieldIdx_t Idx_Gamma,           Idx_Undefined );
+SET_GLOBAL( FieldIdx_t Idx_MolecularWeight, Idx_Undefined );
+SET_GLOBAL( FieldIdx_t Idx_CoolingTime,    Idx_Undefined );
+SET_GLOBAL( FieldIdx_t Idx_Temperature,    Idx_Undefined );
 
 
 #elif ( MODEL == ELBDM )

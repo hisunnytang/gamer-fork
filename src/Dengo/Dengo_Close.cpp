@@ -18,10 +18,11 @@ extern int CheIdx_HeIII;
 extern int CheIdx_HM;
 extern int CheIdx_H2I;
 extern int CheIdx_H2II;
-extern int CheIdx_DI;
-extern int CheIdx_DII;
-extern int CheIdx_HDI;
-extern int CheIdx_Metal;
+extern int CheIdx_CoolingTime;
+extern int CheIdx_Gamma;
+extern int CheIdx_MolecularWeight;
+extern int CheIdx_Temperature;
+
 
 
 
@@ -54,6 +55,7 @@ void Dengo_Close( const int lv, const int SaveSg, const real h_Che_Array[], cons
    const real *Ptr_Dens0  = h_Che_Array + CheIdx_Dens *Size1v;
    const real *Ptr_sEint0 = h_Che_Array + CheIdx_sEint*Size1v;
    const real *Ptr_Ek0    = h_Che_Array + CheIdx_Ek   *Size1v;
+   // Dengo 9-species
    const real *Ptr_e0     = h_Che_Array + CheIdx_e    *Size1v;
    const real *Ptr_HI0    = h_Che_Array + CheIdx_HI   *Size1v;
    const real *Ptr_HII0   = h_Che_Array + CheIdx_HII  *Size1v;
@@ -63,10 +65,11 @@ void Dengo_Close( const int lv, const int SaveSg, const real h_Che_Array[], cons
    const real *Ptr_HM0    = h_Che_Array + CheIdx_HM   *Size1v;
    const real *Ptr_H2I0   = h_Che_Array + CheIdx_H2I  *Size1v;
    const real *Ptr_H2II0  = h_Che_Array + CheIdx_H2II *Size1v;
-   const real *Ptr_DI0    = h_Che_Array + CheIdx_DI   *Size1v;
-   const real *Ptr_DII0   = h_Che_Array + CheIdx_DII  *Size1v;
-   const real *Ptr_HDI0   = h_Che_Array + CheIdx_HDI  *Size1v;
-
+   // additional hydro info from chemistry solver
+   const real *Ptr_CoolingTime0     = h_Che_Array + CheIdx_CoolingTime     * Size1v;
+   const real *Ptr_Gamma0           = h_Che_Array + CheIdx_Gamma           * Size1v;
+   const real *Ptr_MolecularWeight0 = h_Che_Array + CheIdx_MolecularWeight * Size1v; 
+   const real *Ptr_Temperature0     = h_Che_Array + CheIdx_Temperature     * Size1v; 
 
 #  pragma omp parallel
    {
@@ -78,7 +81,10 @@ void Dengo_Close( const int lv, const int SaveSg, const real h_Che_Array[], cons
 
    const real *Ptr_Dens=NULL, *Ptr_sEint=NULL, *Ptr_Ek=NULL, *Ptr_e=NULL, *Ptr_HI=NULL, *Ptr_HII=NULL;
    const real *Ptr_HeI=NULL, *Ptr_HeII=NULL, *Ptr_HeIII=NULL, *Ptr_HM=NULL, *Ptr_H2I=NULL, *Ptr_H2II=NULL;
-   const real *Ptr_DI=NULL, *Ptr_DII=NULL, *Ptr_HDI=NULL;
+   const real *Ptr_CoolingTime     = NULL;
+   const real *Ptr_Gamma           = NULL;
+   const real *Ptr_MolecularWeight = NULL;
+   const real *Ptr_Temperature     = NULL;
 
 #  pragma omp for schedule( static )
    for (int TID=0; TID<NPG; TID++)
@@ -99,9 +105,10 @@ void Dengo_Close( const int lv, const int SaveSg, const real h_Che_Array[], cons
       Ptr_HM    = Ptr_HM0    + offset;
       Ptr_H2I   = Ptr_H2I0   + offset;
       Ptr_H2II  = Ptr_H2II0  + offset;
-      Ptr_DI    = Ptr_DI0    + offset;
-      Ptr_DII   = Ptr_DII0   + offset;
-      Ptr_HDI   = Ptr_HDI0   + offset;
+      Ptr_CoolingTime     = Ptr_CoolingTime0     + offset;
+      Ptr_Gamma           = Ptr_Gamma0           + offset;
+      Ptr_MolecularWeight = Ptr_MolecularWeight0 + offset;
+      Ptr_Temperature     = Ptr_Temperature0     + offset;
 
       for (int LocalID=0; LocalID<8; LocalID++)
       {
@@ -151,6 +158,13 @@ void Dengo_Close( const int lv, const int SaveSg, const real h_Che_Array[], cons
 //            *( fluid[Idx_DII  ][0][0] + idx_p ) = Ptr_DII  [idx_pg];
 //            *( fluid[Idx_HDI  ][0][0] + idx_p ) = Ptr_HDI  [idx_pg];
 //            }
+
+            *( fluid[Idx_CoolingTime    ][0][0] + idx_p ) = Ptr_CoolingTime    [idx_pg];
+            *( fluid[Idx_MolecularWeight][0][0] + idx_p ) = Ptr_MolecularWeight[idx_pg];
+            *( fluid[Idx_Gamma          ][0][0] + idx_p ) = Ptr_Gamma          [idx_pg];
+            *( fluid[Idx_Temperature    ][0][0] + idx_p ) = Ptr_Temperature    [idx_pg];
+
+
 
             idx_pg ++;
          } // for (int idx_p=0; idx_p<CUBE(PS1); idx_p++)

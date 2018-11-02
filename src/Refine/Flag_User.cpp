@@ -70,7 +70,36 @@ bool Flag_User( const int i, const int j, const int k, const int lv, const int P
    Flag = Radius < Threshold;
    */
 // ##########################################################################################################
+   
+   // Compare the actual thermal timescale
+   // with the hydro timescale
+   // flag if thermal timescale is smaller than hydro timescale
+   double dh  = amr->dh[lv];
+   double Cs, Pres, gamma_eff, Dens, Gamma_m1;
+   double dt_hydro, dt_thermal; 
+   
+   const bool CheckMinPres_Yes = true;
+   
+   const real (*Rho )[PS1][PS1] = amr->patch[ amr->FluSg[lv] ][lv][PID]->fluid[DENS];  // density
+   const real (*MomX)[PS1][PS1] = amr->patch[ amr->FluSg[lv] ][lv][PID]->fluid[MOMX];  // momentum x
+   const real (*MomY)[PS1][PS1] = amr->patch[ amr->FluSg[lv] ][lv][PID]->fluid[MOMY];  // momentum y
+   const real (*MomZ)[PS1][PS1] = amr->patch[ amr->FluSg[lv] ][lv][PID]->fluid[MOMZ];  // momentum z
+   const real (*Egy )[PS1][PS1] = amr->patch[ amr->FluSg[lv] ][lv][PID]->fluid[ENGY];  // total energy
+   const real (*Cooling_Time)[PS1][PS1] = amr->patch[ amr->FluSg[lv] ][lv][PID]->fluid[Idx_CoolingTime];
+   const real (*Gamma_Eff)   [PS1][PS1] = amr->patch[ amr->FluSg[lv] ][lv][PID]->fluid[Idx_Gamma]; 
+    
+   Gamma_m1  = Gamma_Eff[k][j][i] - 1.0;
 
+   Pres      = CPU_GetPressure( Rho[k][j][i], MomX[k][j][i], MomY[k][j][i], MomX[k][j][i], Egy[k][j][i], Gamma_m1, CheckMinPres_Yes, MIN_PRES );
+   gamma_eff = Gamma_Eff[k][j][i];
+   Dens      = Rho      [k][j][i];
+   Cs        = SQRT( gamma_eff * Pres / Dens );
+    
+   dt_hydro   = dh / Cs;
+   dt_thermal = Cooling_Time[k][j][i]  ;
+   
+
+   Flag = dt_hydro / FlagTable_User[lv] > dt_thermal;
 
    return Flag;
 

@@ -210,7 +210,7 @@ void SetGridIC( real fluid[], const double x, const double y, const double z, co
    
    const bool CheckMinPres_Yes = true;
    double GasPres;
-   GasTemp = 2000.0;
+   GasTemp = 1000.0;
    GasTemp *= Const_kB / UNIT_E;
    
     // ISOTHERMAL gas profile (Yoshida 2006)

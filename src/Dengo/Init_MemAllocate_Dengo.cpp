@@ -19,11 +19,11 @@ int CheIdx_HeIII = Idx_Undefined;
 int CheIdx_HM    = Idx_Undefined;
 int CheIdx_H2I   = Idx_Undefined;
 int CheIdx_H2II  = Idx_Undefined;
-int CheIdx_DI    = Idx_Undefined;
-int CheIdx_DII   = Idx_Undefined;
-int CheIdx_HDI   = Idx_Undefined;
-int CheIdx_Metal = Idx_Undefined;
 
+int CheIdx_CoolingTime     = Idx_Undefined;
+int CheIdx_Gamma           = Idx_Undefined;
+int CheIdx_MolecularWeight = Idx_Undefined;
+int CheIdx_Temperature     = Idx_Undefined;
 
 
 
@@ -66,7 +66,9 @@ void Init_MemAllocate_Dengo( const int Che_NPG )
    CheIdx_H2I   = Che_NField ++;
    CheIdx_H2II  = Che_NField ++;
    //}
-    
+   
+
+
    /*
    if ( DENGO_PRIMORDIAL >= DENGO_PRI_CHE_NSPE12 ) {
    CheIdx_DI    = Che_NField ++;
@@ -78,6 +80,10 @@ void Init_MemAllocate_Dengo( const int Che_NPG )
    CheIdx_Metal = Che_NField ++;
    */
 
+   CheIdx_CoolingTime     = Che_NField++;
+   CheIdx_Gamma           = Che_NField++;
+   CheIdx_MolecularWeight = Che_NField++;
+   CheIdx_Temperature     = Che_NField++;
    fprintf(stderr, "done creating array in MemAllocate_Denngo %d, %d, %d \n", Che_NField, Che_NPG, PS2);
 // allocate the input/output array for the Dengo solver
    for (int t=0; t<2; t++)

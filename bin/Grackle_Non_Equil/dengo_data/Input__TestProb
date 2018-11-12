@@ -1,0 +1,24 @@
+# problem-specific runtime parameters
+SphCol_Dens_Bg          5.0e1        # background mass density
+SphCol_Dens_Delta       1.0e-3    # top-hat mass density --> total density = Dens_Bg*( 1 + Dens_Delta )
+SphCol_Engy_Bg          1.2397e-07     # background energy density
+SphCol_Radius           0.05      # top-hat radius
+SphCol_Center_X        -1.0         # top-hat center x (<0.0 -> default = box center) [-1.0]
+SphCol_Center_Y        -1.0         # top-hat center y (<0.0 -> default = box center) [-1.0]
+SphCol_Center_Z        -1.0         # top-hat center z (<0.0 -> default = box center) [-1.0]
+
+UseMetal                0                       # add and advect a metal density field
+                                                   # --> to enable this option, one must
+                                                   #     (1) set AGORA_(Disk/Halo)MetalMassFrac properly
+                                                   #     (2) set NCOMP_PASSIVE_USER>=1 and PAR_NPASSIVE_USER>=1 in the Makefile
+                                                   #     (3) define METAL and PAR_METAL_FRAC in Macro.h (hard coding, ugh!)
+                                                   # --> necessary if one wants to enable metal_cooling in Grackle
+MetalMassFrac           1.0e-2                # disk metal mass fraction (disk_metal_mass / disk_gas_mass)
+GasTemp                 2000.0
+
+NFW_Rho                2.0e-21
+NFW_Rs                 0.05
+smoothing_length       0.01
+MolecularHydrogenMassFrac  5.0e-4
+gas_Rs                 0.2
+

@@ -93,6 +93,20 @@ void Output_DumpData( const int Stage )
          }
          break;
 
+         case OUTPUT_CONST_STEP_REFINELV :
+         {
+            // something to calculate the courant time/ min time at the lowest AMR level
+            // for non-comoving coordinates!!!!!
+            // this is bascially the hydro_cfl conditions
+            for ( int lv = NLEVEL; lv < 0; lv-- ){
+                if (NPatchTotal[lv] > 0){
+                    DumpTime = OUTPUT_STEP * dt_InvokeSolver( DT_FLU_SOLVER, lv );
+                    break;
+                }
+            }
+         }
+         break;
+
       } // switch ( OPT__OUTPUT_MODE )
    } // if ( Stage == 0 )
 
@@ -157,6 +171,8 @@ void Output_DumpData( const int Stage )
                                     OutputData = true;
                                  break;
 
+      case OUTPUT_CONST_STEP_REFINELV : if (Step%OUTPUT_STEP == 0 )  OutputData = true;
+                                        break;
       default :
          Aux_Error( ERROR_INFO, "incorrect parameter %s = %d !!\n", "OPT__OUTPUT_MODE", OPT__OUTPUT_MODE );
    } // switch ( OPT__OUTPUT_MODE )

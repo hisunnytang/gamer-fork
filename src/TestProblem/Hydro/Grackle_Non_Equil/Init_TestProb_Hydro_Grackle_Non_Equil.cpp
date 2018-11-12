@@ -65,8 +65,8 @@ void Validate()
          Aux_Message( stderr, "WARNING : it's recommended to enable DUAL_ENERGY for this test\n" );
 #     endif
 
-      if ( OPT__BC_FLU[0] != BC_FLU_PERIODIC )
-         Aux_Message( stderr, "WARNING : non-periodic BC ??\n" );
+      if ( OPT__BC_FLU[0] == BC_FLU_PERIODIC )
+         Aux_Message( stderr, "WARNING : periodic BC ??\n" );
 
       if ( amr->BoxSize[0] != amr->BoxSize[1]  ||  amr->BoxSize[0] != amr->BoxSize[2] )
          Aux_Message( stderr, "WARNING : simulation domain is not cubic ??\n" );

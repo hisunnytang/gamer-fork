@@ -130,8 +130,8 @@ typedef int OptOutputMode_t;
 const OptOutputMode_t
    OUTPUT_CONST_STEP = 1,
    OUTPUT_CONST_DT   = 2,
-   OUTPUT_USE_TABLE  = 3;
-
+   OUTPUT_USE_TABLE  = 3,
+   OUTPUT_CONST_STEP_REFINELV = 4;
 
 // OPT__OUTPUT_PART options
 typedef int OptOutputPart_t;

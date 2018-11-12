@@ -21,7 +21,7 @@ EXECUTABLE := gamer
 
 # output detailed compilation commands (0/1 = off/on)
 #######################################################################################################
-COMPILE_VERBOSE := 0
+COMPILE_VERBOSE := 1
 
 
 
@@ -180,11 +180,11 @@ SIMU_OPTION += -DFLOAT8
 
 # serial mode (in which no MPI libraries are required)
 # --> must disable LOAD_BALANCE
-SIMU_OPTION += -DSERIAL
+#SIMU_OPTION += -DSERIAL
 
 # load-balance parallelization: HILBERT
 # --> must disable SERIAL
-#SIMU_OPTION += -DLOAD_BALANCE=HILBERT
+SIMU_OPTION += -DLOAD_BALANCE=HILBERT
 
 # overlap MPI communication with computation
 # --> NOT supported yet; must enable LOAD_BALANCE
@@ -244,18 +244,18 @@ SIMU_OPTION += -DEXTERNAL_NFW_POTENTIAL
 
 # gnu
 # -------------------------------------------------------------------------------
- CXX         = g++                                       # serial compiler
+#CXX         = g++                                       # serial compiler
 # CXX         = /home/kwoksun2/anaconda2/bin/mpicxx                    # MPI compiler
-#CXX         = CC                                        # cray wrapper script
+CXX         = CC                                        # cray wrapper script
 #CXXFLAG     = -g -O3                                    # general flags
 CXXFLAG     = -g -O3 -std=c++11
-#CXXFLAG     = -g -Ofast
- CXXFLAG    += -Wall -Wextra                             # warning flags
- CXXFLAG    += -Wno-unused-variable -Wno-unused-parameter \
+CXXFLAG     = -g -Ofast
+CXXFLAG    += -Wall -Wextra                             # warning flags
+CXXFLAG    += -Wno-unused-variable -Wno-unused-parameter \
                -Wno-maybe-uninitialized -Wno-unused-but-set-variable \
                -Wno-unused-result -Wno-unused-function
- OPENMPFLAG  = -fopenmp                                  # openmp flag
- LIB         =                                           # libraries and linker flags
+OPENMPFLAG  = -fopenmp                                  # openmp flag
+# LIB         =                                           # libraries and linker flags
 
 # for debug only
 ifeq "$(filter -DGAMER_DEBUG, $(SIMU_OPTION))" "-DGAMER_DEBUG"
@@ -282,17 +282,17 @@ endif
 #######################################################################################################
 
 # template
-CUDA_PATH    :=
-FFTW_PATH    := /home/kwoksun2/fftw-2.1.5/fftw2_install
-MPI_PATH     := /home/kwoksun2/anaconda2/lib
-HDF5_PATH    := /home/kwoksun2/anaconda2
-GRACKLE_PATH := /home/kwoksun2/grackle_install
-DENGO_PATH   := /home/kwoksun2/dengo_install
-GSL_PATH     :=
-LIBYT_PATH   :=
+#CUDA_PATH    :=
+#FFTW_PATH    := /home/kwoksun2/fftw-2.1.5/fftw2_install
+#MPI_PATH     := /home/kwoksun2/anaconda2/lib
+#HDF5_PATH    := /home/kwoksun2/anaconda2
+#GRACKLE_PATH := /home/kwoksun2/grackle_install
+DENGO_PATH   := /u/sciteam/kwoksun2/dengo_install
+#GSL_PATH     :=
+#LIBYT_PATH   :=
 
 # NCSA-bluewaters (only need to specify the path of user-installed packages)
-#GRACKLE_PATH :=
+GRACKLE_PATH := /u/sciteam/kwoksun2/grackle_install
 
 # UIUC-campus (intel-15.0 + openmpi-1.8.4)
 #CUDA_PATH    := /usr/local/cuda/7.0
@@ -681,7 +681,7 @@ LIB += -L$(GRACKLE_PATH)/lib -lgrackle
 endif
 
 ifeq "$(filter -DSUPPORT_DENGO, $(SIMU_OPTION))" "-DSUPPORT_DENGO"
-LIB += -L$(DENGO_PATH)/lib -ldengo
+LIB += -Wl,-rpath-link,$(DENGO_PATH)/lib -L$(DENGO_PATH)/lib -ldengo
 endif
 
 
@@ -716,7 +716,7 @@ endif
 
 ifeq "$(filter -DSUPPORT_DENGO, $(SIMU_OPTION))" "-DSUPPORT_DENGO"
 INCLUDE += -I$(DENGO_PATH)/include 
-INCLUDE += -I/home/kwoksun2/cvode-3.1.0/instdir/include
+INCLUDE += -I/u/sciteam/kwoksun2/sundials/instdir/include
 endif
 
 

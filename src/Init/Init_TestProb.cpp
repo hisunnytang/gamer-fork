@@ -23,6 +23,7 @@ void Init_TestProb_Hydro_JeansInstability();
 
 void Init_TestProb_ELBDM_ExtPot();
 
+void Init_TestProb_Hydro_Grackle_Non_Equil();
 
 
 
@@ -66,6 +67,7 @@ void Init_TestProb()
 
       case TESTPROB_ELBDM_EXTPOT :                       Init_TestProb_ELBDM_ExtPot();                      break;
 
+      case TESTPROB_HYDRO_GRACKLE_NON_EQUIL:             Init_TestProb_Hydro_Grackle_Non_Equil();           break;
       default: Aux_Error( ERROR_INFO, "unsupported TESTPROB_ID (%d) !!\n", TESTPROB_ID );
    } // switch( TESTPROB_ID )
 

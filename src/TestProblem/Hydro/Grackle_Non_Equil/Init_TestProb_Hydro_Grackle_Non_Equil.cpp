@@ -201,7 +201,7 @@ void SetGridIC( real fluid[], const double x, const double y, const double z, co
    const double r = sqrt( SQR(x-SphCol_Center[0]) + SQR(y-SphCol_Center[1]) + SQR(z-SphCol_Center[2]) );
    
    const bool CheckMinPres_Yes = false;
-   GasTemp = 1000.0;
+   GasTemp = 1500.0;
    double GasPres;    
    GasTemp *= Const_kB / UNIT_E;
    GasPres = Hydro_Temp2Pres( SphCol_Dens_Bg, GasTemp, MOLECULAR_WEIGHT, 
@@ -243,6 +243,8 @@ void SetGridIC( real fluid[], const double x, const double y, const double z, co
    fluid[Idx_H2I]   = fluid[DENS]*1e-6;
    fluid[Idx_H2II]  = fluid[DENS]*1e-20;
    fluid[Idx_e]    = fluid[DENS]*1e-20;
+   
+   fluid[Idx_CoolingTime]    = 1.0e-2;
 
 
 #     endif

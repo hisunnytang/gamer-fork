@@ -185,6 +185,14 @@ double Mis_GetTimeStep( const int lv, const double dTime_SyncFaLv, const double 
    sprintf( dTime_Name[NdTime++], "%s", "Par_Acc" ); }
 #  endif
 
+// 1.9 Criterion NINE CoolingTimestep
+
+#ifdef SUPPORT_GRACKLE
+   dTime[NdTime] = dTime_dt * dt_InvokeSolver(DT_COOLING_SOLVER, lv);
+   //fprintf(stderr, "Cooling Time = %0.5g\n", dTime[NdTime]);
+   Aux_Message( stdout, "Cooling Time = %0.5g\n", dTime[NdTime] );
+   sprintf( dTime_Name[NdTime++], "%s", "CoolingTime" );
+#endif
 
 
 // 2. get the minimum time-step from all criteria

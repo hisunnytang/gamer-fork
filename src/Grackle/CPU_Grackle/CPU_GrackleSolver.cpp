@@ -41,6 +41,10 @@ void CPU_GrackleSolver( grackle_field_data *Che_FieldData, code_units Che_Units,
    if (  solve_chemistry( &Che_Units, Che_FieldData, dt ) == 0  )
       Aux_Error( ERROR_INFO, "Grackle solve_chemistry() failed !!\n" );
 
+
+   if (  calculate_cooling_time( &Che_Units, Che_FieldData, Che_FieldData->CoolingTime ) == 0  )
+      Aux_Error( ERROR_INFO, "Grackle calculate_cooling_time() failed !!\n" );
+
 } // FUNCTION : CPU_GrackleSolver
 
 

@@ -170,7 +170,7 @@ const Check_t
 // target solver in InvokeSolver()
 // --> must start from 0 because of the current TIMING_SOLVER implementation
 // --> when adding new solvers, please modify the NSOLVER constant accordingly
-const int NSOLVER = 7;
+const int NSOLVER = 8;
 
 typedef int Solver_t;
 const Solver_t
@@ -182,6 +182,7 @@ const Solver_t
 #endif
 #ifdef SUPPORT_GRACKLE
   ,GRACKLE_SOLVER             = 4
+  ,DT_COOLING_SOLVER          = 7
 #endif
   ,DT_FLU_SOLVER              = 5
 #ifdef GRAVITY

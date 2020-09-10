@@ -114,6 +114,10 @@ void InvokeSolver( const Solver_t TSolver, const int lv, const double TimeNew, c
       case GRACKLE_SOLVER:             NPG_Max = CHE_GPU_NPGROUP;    break;
 #     endif
 
+#     ifdef SUPPORT_GRACKLE
+      case DT_COOLING_SOLVER:         NPG_Max = FLU_GPU_NPGROUP;    break;
+#     endif
+
 //    currently we use FLU_GPU_NPGROUP and POT_GPU_NPGROUP for the dt solvers
       case DT_FLU_SOLVER:              NPG_Max = FLU_GPU_NPGROUP;    break;
 #     ifdef GRAVITY
@@ -363,6 +367,10 @@ void Preparation_Step( const Solver_t TSolver, const int lv, const double TimeNe
 #     ifdef SUPPORT_GRACKLE
       case GRACKLE_SOLVER :
          Grackle_Prepare( lv, h_Che_Array[ArrayID], NPG, PID0_List );
+      break;
+      
+      case DT_COOLING_SOLVER:
+         dt_Prepare_CoolingTime( lv, h_Cool_Array_T[ArrayID], NPG, PID0_List );
       break;
 #     endif
 
@@ -619,6 +627,13 @@ void Solver( const Solver_t TSolver, const int lv, const double TimeNew, const d
 #        endif
       break;
 
+#ifdef SUPPORT_GRACKLE
+      case DT_COOLING_SOLVER:
+          CPU_dtSolver_CoolingTime( h_dt_Array_T[ArrayID],  h_Cool_Array_T[ArrayID], NPG);
+
+         break;
+#endif
+
 #     ifdef GRAVITY
       case DT_GRA_SOLVER:
 #        ifdef GPU
@@ -723,6 +738,10 @@ void Closing_Step( const Solver_t TSolver, const int lv, const int SaveSg_Flu, c
 #     ifdef SUPPORT_GRACKLE
       case GRACKLE_SOLVER :
          Grackle_Close( lv, SaveSg_Flu, h_Che_Array[ArrayID], NPG, PID0_List );
+      break;
+      
+      case DT_COOLING_SOLVER:
+         dt_Close( h_dt_Array_T[ArrayID], NPG );
       break;
 #     endif
 

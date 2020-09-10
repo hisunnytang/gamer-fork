@@ -38,6 +38,7 @@ void End_MemFree_Fluid()
 #     endif
       delete [] h_dt_Array_T     [t];  h_dt_Array_T     [t] = NULL;
       delete [] h_Flu_Array_T    [t];  h_Flu_Array_T    [t] = NULL;
+      delete [] h_Cool_Array_T    [t];  h_Cool_Array_T    [t] = NULL;
 #     ifdef DUAL_ENERGY
       delete [] h_DE_Array_F_Out [t];  h_DE_Array_F_Out [t] = NULL;
 #     endif

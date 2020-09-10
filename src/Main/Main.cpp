@@ -290,6 +290,7 @@ code_units Che_Units;
 // (3-5) dt solver
 real  *h_dt_Array_T[2]                                             = { NULL, NULL };
 real (*h_Flu_Array_T[2])[FLU_NIN_T][ CUBE(PS1) ]                   = { NULL, NULL };
+real (*h_Cool_Array_T[2])[ CUBE(PS1) ]                             = { NULL, NULL };
 #ifdef GRAVITY
 real (*h_Pot_Array_T[2])[ CUBE(GRA_NXT) ]                          = { NULL, NULL };
 #endif

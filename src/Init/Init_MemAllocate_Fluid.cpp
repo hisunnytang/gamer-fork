@@ -52,6 +52,7 @@ void Init_MemAllocate_Fluid( const int Flu_NPatchGroup, const int Pot_NPatchGrou
 
       h_dt_Array_T     [t] = new real [dt_NPatch];
       h_Flu_Array_T    [t] = new real [Flu_NPatch][FLU_NIN_T][ CUBE(PS1) ];
+      h_Cool_Array_T   [t] = new real [Flu_NPatch][ CUBE(PS1) ];
 
 #     ifdef DUAL_ENERGY
       h_DE_Array_F_Out [t] = new char [Flu_NPatchGroup][ CUBE(PS2) ];

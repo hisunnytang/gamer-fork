@@ -23,6 +23,7 @@ extern int CheIdx_DII;
 extern int CheIdx_HDI;
 extern int CheIdx_Metal;
 
+extern int CheIdx_CoolingTime;
 
 
 
@@ -118,6 +119,7 @@ void Grackle_Prepare( const int lv, real h_Che_Array[], const int NPG, const int
    real *Ptr_HDI0   = h_Che_Array + CheIdx_HDI  *Size1v;
    real *Ptr_Metal0 = h_Che_Array + CheIdx_Metal*Size1v;
 
+   real *Ptr_CoolingTime0     = h_Che_Array + CheIdx_CoolingTime     * Size1v;
 
 #  pragma omp parallel
    {
@@ -135,6 +137,7 @@ void Grackle_Prepare( const int lv, real h_Che_Array[], const int NPG, const int
    real *Ptr_Dens=NULL, *Ptr_sEint=NULL, *Ptr_Ent=NULL, *Ptr_e=NULL, *Ptr_HI=NULL, *Ptr_HII=NULL;
    real *Ptr_HeI=NULL, *Ptr_HeII=NULL, *Ptr_HeIII=NULL, *Ptr_HM=NULL, *Ptr_H2I=NULL, *Ptr_H2II=NULL;
    real *Ptr_DI=NULL, *Ptr_DII=NULL, *Ptr_HDI=NULL, *Ptr_Metal=NULL;
+   real *Ptr_CoolingTime     = NULL;
 
 #  pragma omp for schedule( static )
    for (int TID=0; TID<NPG; TID++)
@@ -159,6 +162,7 @@ void Grackle_Prepare( const int lv, real h_Che_Array[], const int NPG, const int
       Ptr_DII   = Ptr_DII0   + offset;
       Ptr_HDI   = Ptr_HDI0   + offset;
       Ptr_Metal = Ptr_Metal0 + offset;
+      Ptr_CoolingTime     = Ptr_CoolingTime0     + offset;
 
       for (int LocalID=0; LocalID<8; LocalID++)
       {
@@ -228,6 +232,9 @@ void Grackle_Prepare( const int lv, real h_Che_Array[], const int NPG, const int
             if ( GRACKLE_METAL )
             Ptr_Metal[idx_pg] = *( fluid[Idx_Metal][0][0] + idx_p );
 
+
+            Ptr_CoolingTime    [idx_pg] = *(fluid[Idx_CoolingTime    ][0][0] + idx_p);
+
             idx_p  ++;
             idx_pg ++;
          } // i,j,k
@@ -268,6 +275,9 @@ void Grackle_Prepare( const int lv, real h_Che_Array[], const int NPG, const int
    if ( GRACKLE_METAL )
    Che_FieldData->metal_density   = Ptr_Metal0;
 
+   //this does NOT originally exist in grackle...
+   // need to define an extra pointer in grackle_field_data
+   Che_FieldData->CoolingTime        = Ptr_CoolingTime0;
 } // FUNCTION : Grackle_Prepare
 
 

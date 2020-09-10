@@ -22,6 +22,7 @@ extern int CheIdx_DI;
 extern int CheIdx_DII;
 extern int CheIdx_HDI;
 extern int CheIdx_Metal;
+extern int CheIdx_CoolingTime;
 
 
 
@@ -66,6 +67,7 @@ void Grackle_Close( const int lv, const int SaveSg, const real h_Che_Array[], co
    const real *Ptr_DII0   = h_Che_Array + CheIdx_DII  *Size1v;
    const real *Ptr_HDI0   = h_Che_Array + CheIdx_HDI  *Size1v;
 
+   const real *Ptr_CoolingTime0 = h_Che_Array + CheIdx_CoolingTime * Size1v;
 
 #  pragma omp parallel
    {
@@ -81,6 +83,7 @@ void Grackle_Close( const int lv, const int SaveSg, const real h_Che_Array[], co
    const real *Ptr_Dens=NULL, *Ptr_sEint=NULL, *Ptr_Ent=NULL, *Ptr_e=NULL, *Ptr_HI=NULL, *Ptr_HII=NULL;
    const real *Ptr_HeI=NULL, *Ptr_HeII=NULL, *Ptr_HeIII=NULL, *Ptr_HM=NULL, *Ptr_H2I=NULL, *Ptr_H2II=NULL;
    const real *Ptr_DI=NULL, *Ptr_DII=NULL, *Ptr_HDI=NULL;
+   const real *Ptr_CoolingTime     = NULL;
 
 #  pragma omp for schedule( static )
    for (int TID=0; TID<NPG; TID++)
@@ -104,6 +107,7 @@ void Grackle_Close( const int lv, const int SaveSg, const real h_Che_Array[], co
       Ptr_DI    = Ptr_DI0    + offset;
       Ptr_DII   = Ptr_DII0   + offset;
       Ptr_HDI   = Ptr_HDI0   + offset;
+      Ptr_CoolingTime     = Ptr_CoolingTime0     + offset;
 
       for (int LocalID=0; LocalID<8; LocalID++)
       {
@@ -158,6 +162,8 @@ void Grackle_Close( const int lv, const int SaveSg, const real h_Che_Array[], co
             *( fluid[Idx_DII  ][0][0] + idx_p ) = Ptr_DII  [idx_pg];
             *( fluid[Idx_HDI  ][0][0] + idx_p ) = Ptr_HDI  [idx_pg];
             }
+
+            *( fluid[Idx_CoolingTime][0][0] + idx_p ) = fabs(Ptr_CoolingTime    [idx_pg]);
 
             idx_p  ++;
             idx_pg ++;

@@ -23,6 +23,7 @@ int CheIdx_DI    = Idx_Undefined;
 int CheIdx_DII   = Idx_Undefined;
 int CheIdx_HDI   = Idx_Undefined;
 int CheIdx_Metal = Idx_Undefined;
+int CheIdx_CoolingTime     = Idx_Undefined;
 
 
 
@@ -75,6 +76,8 @@ void Init_MemAllocate_Grackle( const int Che_NPG )
 
    if ( GRACKLE_METAL )
    CheIdx_Metal = Che_NField ++;
+   
+   CheIdx_CoolingTime     = Che_NField++;
 
 
 // allocate the input/output array for the Grackle solver

@@ -86,6 +86,8 @@ void Init_Field()
 // --> may need a machanism to allow users to overwrite this default setup
    if ( GRACKLE_METAL )
    Idx_Metal   = AddField( "Metal",    (GRACKLE_PRIMORDIAL==GRACKLE_PRI_CHE_CLOUDY)?NORMALIZE_NO:NORMALIZE_YES );
+   
+   Idx_CoolingTime     = AddField( "CoolingTime",      NORMALIZE_NO );
 #  endif // #ifdef SUPPORT_GRACKLE
 
 

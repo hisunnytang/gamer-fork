@@ -5,13 +5,10 @@
 
 // problem-specific global variables
 // =======================================================================================
-static double SphCol_Dens_Bg;       // background mass density
-static double SphCol_Dens_Delta;    // top-hat mass density --> total density = Dens_Bg*( 1 + Dens_Delta )
-static double SphCol_Engy_Bg;       // background energy density
+static double SphCol_Dens;       // background mass density
 static double SphCol_Radius;        // top-hat radius
 static double SphCol_Center[3];     // top-hat center
-static double GasTemp;
-static double MetalMassFrac;
+static double GasTemperature;
 static double MolecularHydrogenMassFrac;
 // =======================================================================================
 
@@ -107,19 +104,16 @@ void SetParameter()
 // ********************************************************************************************************************************
 // ReadPara->Add( "KEY_IN_THE_FILE",   &VARIABLE,              DEFAULT,       MIN,              MAX               );
 // ********************************************************************************************************************************
-   ReadPara->Add( "SphCol_Dens_Bg",    &SphCol_Dens_Bg,        -1.0,          Eps_double,       NoMax_double      );
-   ReadPara->Add( "SphCol_Dens_Delta", &SphCol_Dens_Delta,     -1.0,          Eps_double,       NoMax_double      );
-   ReadPara->Add( "SphCol_Engy_Bg",    &SphCol_Engy_Bg,        -1.0,          Eps_double,       NoMax_double      );
-   ReadPara->Add( "SphCol_Radius",     &SphCol_Radius,         -1.0,          Eps_double,       NoMax_double      );
    ReadPara->Add( "SphCol_Center_X",   &SphCol_Center[0],      -1.0,          NoMin_double,     NoMax_double      );
    ReadPara->Add( "SphCol_Center_Y",   &SphCol_Center[1],      -1.0,          NoMin_double,     NoMax_double      );
    ReadPara->Add( "SphCol_Center_Z",   &SphCol_Center[2],      -1.0,          NoMin_double,     NoMax_double      );
 
-// READ PASSIVE METAL FIELD mass fraction
-   ReadPara->Add( "MetalMassFrac",     &MetalMassFrac,          -1.0,          0.0,              1.0               );
-   ReadPara->Add( "MolecularHydrogenMassFrac",     &MolecularHydrogenMassFrac,          -1.0,          0.0,              1.0               );
-// REDA initial temperature
-   ReadPara->Add( "GasTemp",           &GasTemp,               -1.0,          1.0,              NoMax_double      );
+
+
+   ReadPara->Add( "MolecularHydrogenMassFrac", &MolecularHydrogenMassFrac, 1.0e-4,     Eps_double, NoMax_double);
+   ReadPara->Add( "GasTemperature",                   &GasTemperature,                   1000.0,     1.0,        NoMax_double);
+   ReadPara->Add( "SphCol_Dens",               &SphCol_Dens,               1e3,        Eps_double, NoMax_double);
+   ReadPara->Add( "SphCol_Radius",             &SphCol_Radius,             -1.0,       Eps_double, NoMax_double);
 
    ReadPara->Read( FileName );
 
@@ -154,16 +148,12 @@ void SetParameter()
    {
       Aux_Message( stdout, "=============================================================================\n" );
       Aux_Message( stdout, "  test problem ID           = %d\n",     TESTPROB_ID       );
-      Aux_Message( stdout, "  background mass density   = %13.7e\n", SphCol_Dens_Bg    );
-      Aux_Message( stdout, "  top-hat over-density      = %13.7e\n", SphCol_Dens_Delta );
-      Aux_Message( stdout, "  background energy density = %13.7e\n", SphCol_Engy_Bg    );
       Aux_Message( stdout, "  top-hat radius            = %13.7e\n", SphCol_Radius     );
       Aux_Message( stdout, "  top-hat center x          = %13.7e\n", SphCol_Center[0]  );
       Aux_Message( stdout, "  ...            y          = %13.7e\n", SphCol_Center[1]  );
       Aux_Message( stdout, "  ...            z          = %13.7e\n", SphCol_Center[2]  );
-
       Aux_Message( stdout, "  MolecularMassFrac         = %13.7e\n", MolecularHydrogenMassFrac  );
-      Aux_Message( stdout, "  GasTemp                   = %13.7e\n", GasTemp  );
+      Aux_Message( stdout, "  GasTemperature                   = %13.7e\n", GasTemperature  );
 
       Aux_Message( stdout, "=============================================================================\n" );
    }
@@ -201,50 +191,46 @@ void SetGridIC( real fluid[], const double x, const double y, const double z, co
    const double r = sqrt( SQR(x-SphCol_Center[0]) + SQR(y-SphCol_Center[1]) + SQR(z-SphCol_Center[2]) );
    
    const bool CheckMinPres_Yes = false;
-   GasTemp = 1500.0;
-   double GasPres;    
-   GasTemp *= Const_kB / UNIT_E;
-   GasPres = Hydro_Temp2Pres( SphCol_Dens_Bg, GasTemp, MOLECULAR_WEIGHT, 
+   double GasPres, GasTemp;    
+   GasTemp = GasTemperature*Const_kB / UNIT_E;
+   GasPres = Hydro_Temp2Pres( SphCol_Dens, GasTemp, MOLECULAR_WEIGHT, 
           Const_mH/UNIT_M, CheckMinPres_Yes, MIN_PRES );
 
-//   fprintf(stderr, "GasPres from Init IC: %0.5g\n", GasPres);
-//   fprintf(stderr, "Dens_Bg from Init IC: %0.5g\n", SphCol_Dens_Bg);
-//   fprintf(stderr, "GasTemp from Init IC: %0.5g\n", GasTemp);
-//   fprintf(stderr, "MIN_PRES from Init IC: %0.5g\n", MIN_PRES);
-   fluid[DENS] = SphCol_Dens_Bg;
    fluid[MOMX] = 0.0;
    fluid[MOMY] = 0.0;
    fluid[MOMZ] = 0.0;
-   fluid[ENGY] = GasPres/ (5.0/3.0 - 1);
-
-   if ( r <= SphCol_Radius ){
-       fluid[DENS] *= ( 1.0 + SphCol_Dens_Delta );
-       GasPres = Hydro_Temp2Pres( SphCol_Dens_Bg*( 1.0 + SphCol_Dens_Delta), 
-		GasTemp, MOLECULAR_WEIGHT, Const_mH/UNIT_M, CheckMinPres_Yes, MIN_PRES );
-       fluid[ENGY] = GasPres/ (5.0/3.0 - 1);
-   }
-   
-   fluid[MOMX] = 0.0;
-   fluid[MOMY] = 0.0;
-   fluid[MOMZ] = 0.0;
-   fluid[DENS] = SphCol_Dens_Bg* pow( 1.0 + pow( (r / SphCol_Radius) , 2.0) , - 1.5);
+   fluid[DENS] = SphCol_Dens* pow( 1.0 + pow( (r / SphCol_Radius) , 2.0) , - 1.5);
    GasPres = Hydro_Temp2Pres( fluid[DENS], GasTemp, MOLECULAR_WEIGHT, 
            Const_mH/UNIT_M, CheckMinPres_Yes, MIN_PRES );
-   fluid[ENGY] = GasPres / ( 5.0/3.0 - 1 );  
+   fluid[ENGY] = GasPres / ( GAMMA - 1 );  
 
 #     if ( NCOMP_PASSIVE > 0 )
    //fluid[Idx_METAL] = fluid[DENS]*MetalMassFrac;
+
+#ifdef SUPPORT_GRACKLE
    fluid[Idx_HI]    = fluid[DENS]*0.76;
    fluid[Idx_HII]   = fluid[DENS]*1e-20;
    fluid[Idx_HeI]   = fluid[DENS]*0.24;
    fluid[Idx_HeII]  = fluid[DENS]*1e-20;
    fluid[Idx_HeIII] = fluid[DENS]*1e-20;
    fluid[Idx_HM]    = fluid[DENS]*1e-20;
-   fluid[Idx_H2I]   = fluid[DENS]*1e-6;
+   fluid[Idx_H2I]   = fluid[DENS]*MolecularHydrogenMassFrac;
    fluid[Idx_H2II]  = fluid[DENS]*1e-20;
    fluid[Idx_e]    = fluid[DENS]*1e-20;
-   
-   fluid[Idx_CoolingTime]    = 1.0e-2;
+#endif
+
+#ifdef SUPPORT_DENGO
+   fluid[Idx_H_1]    = fluid[DENS]*0.76;
+   fluid[Idx_H_2]   = fluid[DENS]*1e-20;
+   fluid[Idx_He_1]   = fluid[DENS]*0.24;
+   fluid[Idx_He_2]  = fluid[DENS]*1e-20;
+   fluid[Idx_He_3] = fluid[DENS]*1e-20;
+   fluid[Idx_H_m0]    = fluid[DENS]*1e-20;
+   fluid[Idx_H2_1]   = fluid[DENS]*MolecularHydrogenMassFrac;
+   fluid[Idx_H2_2]  = fluid[DENS]*1e-20;
+   fluid[Idx_de]    = fluid[DENS]*1e-20;
+#endif
+   fluid[Idx_CoolingTime]    = 1.0e2;
 
 
 #     endif

@@ -72,6 +72,18 @@ void End_MemFree()
    }
 #  endif
 
+#  ifdef SUPPORT_DENGO
+   if ( DENGO_ACTIVATE )
+   {
+      End_MemFree_Dengo();
+
+      if ( Che_FieldData != NULL )
+      {
+         delete Che_FieldData;
+         Che_FieldData = NULL;
+      }
+   }
+#  endif
 
 // 4. dump table
    if ( DumpTable != NULL )

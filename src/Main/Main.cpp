@@ -203,6 +203,22 @@ int                  GRACKLE_H2_OPA_APPROX;
 int                  CHE_GPU_NPGROUP;
 #endif
 
+// (2-7) Dengo 
+#ifdef SUPPORT_DENGO
+bool                 DENGO_ACTIVATE;
+bool                 DENGO_VERBOSE;
+bool                 DENGO_COOLING;
+bool                 DENGO_METAL;
+bool                 DENGO_UV;
+bool                 DENGO_CMB_FLOOR;
+bool                 DENGO_PE_HEATING;
+double               DENGO_PE_HEATING_RATE;
+char                 DENGO_DATA_TABLE[MAX_STRING];
+int                  CHE_GPU_NPGROUP;
+double               DENGO_RELTOL;
+double               DENGO_FLOOR_VALUE;
+#endif
+
 // (2-8) star formation
 #ifdef STAR_FORMATION
 SF_CreateStarScheme_t SF_CREATE_STAR_SCHEME;
@@ -284,6 +300,13 @@ real (*h_Flu_Array_USG_G[2])[GRA_NIN-1][PS1][PS1][PS1]             = { NULL, NUL
 #ifdef SUPPORT_GRACKLE
 real (*h_Che_Array[2])                                             = { NULL, NULL };
 grackle_field_data *Che_FieldData                                  = NULL;
+code_units Che_Units;
+#endif
+
+// (3-4a) Dengo chemistry
+#ifdef SUPPORT_DENGO
+real (*h_Che_Array[2])                                            = { NULL, NULL };
+dengo_field_data *Che_FieldData                                 = NULL;
 code_units Che_Units;
 #endif
 

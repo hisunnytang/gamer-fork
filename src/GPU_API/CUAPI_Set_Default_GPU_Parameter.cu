@@ -333,6 +333,25 @@ void CUAPI_Set_Default_GPU_Parameter( int &GPU_NStream, int &Flu_GPU_NPGroup, in
 #     error : UNKNOWN GPU_ARCH !!
 #     endif
 
+#  ifdef SUPPORT_DENGO
+   if ( Che_GPU_NPGroup <= 0 )
+   {
+#     if   ( GPU_ARCH == FERMI )
+      Che_GPU_NPGroup = 1*GPU_NStream*DeviceProp.multiProcessorCount;
+#     elif ( GPU_ARCH == KEPLER )
+      Che_GPU_NPGroup = 1*GPU_NStream*DeviceProp.multiProcessorCount;
+#     elif ( GPU_ARCH == MAXWELL )
+      Che_GPU_NPGroup = 1*GPU_NStream*DeviceProp.multiProcessorCount;
+#     elif ( GPU_ARCH == PASCAL )
+      Che_GPU_NPGroup = 1*GPU_NStream*DeviceProp.multiProcessorCount;
+#     elif ( GPU_ARCH == VOLTA )
+      Che_GPU_NPGroup = 1*GPU_NStream*DeviceProp.multiProcessorCount;
+#     elif ( GPU_ARCH == TURING )
+      Che_GPU_NPGroup = 1*GPU_NStream*DeviceProp.multiProcessorCount;
+#     else
+#     error : UNKNOWN GPU_ARCH !!
+#     endif
+
       if ( MPI_Rank == 0 )
          Aux_Message( stdout, "NOTE : parameter \"%s\" is set to the default value = %d"
                               " --> might be further fine-tuned\n", "CHE_GPU_NPGROUP", Che_GPU_NPGroup );

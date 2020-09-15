@@ -190,7 +190,14 @@ double Mis_GetTimeStep( const int lv, const double dTime_SyncFaLv, const double 
 #ifdef SUPPORT_GRACKLE
    dTime[NdTime] = dTime_dt * dt_InvokeSolver(DT_COOLING_SOLVER, lv);
    //fprintf(stderr, "Cooling Time = %0.5g\n", dTime[NdTime]);
-   Aux_Message( stdout, "Cooling Time = %0.5g\n", dTime[NdTime] );
+   //Aux_Message( stdout, "Cooling Time = %0.5g\n", dTime[NdTime] );
+   sprintf( dTime_Name[NdTime++], "%s", "CoolingTime" );
+#endif
+
+#ifdef SUPPORT_DENGO
+   dTime[NdTime] = dTime_dt * dt_InvokeSolver(DT_COOLING_SOLVER, lv);
+   //fprintf(stderr, "Cooling Time = %0.5g\n", dTime[NdTime]);
+   //Aux_Message( stdout, "Cooling Time = %0.5g\n", dTime[NdTime] );
    sprintf( dTime_Name[NdTime++], "%s", "CoolingTime" );
 #endif
 

@@ -111,6 +111,7 @@ struct Makefile_t
    int SupportHDF5;
    int SupportGSL;
    int SupportGrackle;
+   int SupportDengo;
    int RandomNumber;
 
 #  ifdef GRAVITY
@@ -507,6 +508,23 @@ struct InputPara_t
    int    Grackle_CIE_Cooling;
    int    Grackle_H2_OpaApprox;
    int    Che_GPU_NPGroup;
+#  endif
+
+// Dengo
+#  ifdef SUPPORT_DENGO
+   int    Dengo_Activate;
+   int    Dengo_Verbose;
+   int    Dengo_Cooling;
+   int    Dengo_Primordial;
+   int    Dengo_Metal;
+   int    Dengo_UV;
+   int    Dengo_CMB_Floor;
+   int    Dengo_PE_Heating;
+   double Dengo_PE_HeatingRate;
+   char  *Dengo_DataFile;
+   int    Che_GPU_NPGroup;
+   double Dengo_reltol;
+   double Dengo_floor_value;
 #  endif
 
 // star formation

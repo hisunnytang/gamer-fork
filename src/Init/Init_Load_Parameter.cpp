@@ -193,6 +193,16 @@ void Init_Load_Parameter()
    ReadPara->Add( "CHE_GPU_NPGROUP",            &CHE_GPU_NPGROUP,                -1,               NoMin_int,     NoMax_int      );
 #  endif
 
+// Dengo 
+#  ifdef SUPPORT_DENGO
+   ReadPara->Add( "DENGO_ACTIVATE",           &DENGO_ACTIVATE,                true,            Useless_bool,  Useless_bool   );
+   ReadPara->Add( "DENGO_VERBOSE",            &DENGO_VERBOSE,                 true,            Useless_bool,  Useless_bool   );
+   ReadPara->Add( "DENGO_DATA_TABLE",         DENGO_DATA_TABLE,               Useless_str,     Useless_str,   Useless_str    );
+   ReadPara->Add( "DENGO_RELTOL",             &DENGO_RELTOL,                  1.0e-5,          1.0e-8,        1.0e-2    );
+   ReadPara->Add( "DENGO_FLOOR_VALUE",         &DENGO_FLOOR_VALUE,              1.0e-16,         1.0e-20,        1.0e-10    );
+// do not check CHE_GPU_NPGROUP since it may be reset by either Init_ResetDefaultParameter() or CUAPI_Set_Default_GPU_Parameter()
+   ReadPara->Add( "CHE_GPU_NPGROUP",            &CHE_GPU_NPGROUP,                -1,               NoMin_int,     NoMax_int      );
+#  endif
 
 // star formation
 #  ifdef STAR_FORMATION

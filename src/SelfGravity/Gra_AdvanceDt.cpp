@@ -134,6 +134,9 @@ void Gra_AdvanceDt( const int lv, const double TimeNew, const double TimeOld, co
 #        ifdef SUPPORT_GRACKLE
          if ( !GRACKLE_ACTIVATE )
 #        endif
+#        ifdef SUPPORT_DENGO
+         if ( !DENGO_ACTIVATE )
+#        endif
          if ( OPT__RESET_FLUID )
          {
             if ( Flu_ResetByUser_API_Ptr != NULL )
@@ -168,6 +171,9 @@ void Gra_AdvanceDt( const int lv, const double TimeNew, const double TimeOld, co
 //    call Flu_ResetByUser_API_Ptr() here only if GRACKLE is disabled
 #     ifdef SUPPORT_GRACKLE
       if ( !GRACKLE_ACTIVATE )
+#     endif
+#     ifdef SUPPORT_DENGO
+      if ( !DENGO_ACTIVATE )
 #     endif
       if ( Gravity  &&  OPT__RESET_FLUID )
       {

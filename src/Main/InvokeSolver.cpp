@@ -40,6 +40,7 @@ extern Timer_t *Timer_Poi_PrePot_F[NLEVEL];
 //                                   GRAVITY_SOLVER             : Gravity solver
 //                                   POISSON_AND_GRAVITY_SOLVER : Poisson + Gravity solvers
 //                                   GRACKLE_SOLVER             : Grackle solver
+//                                   DENGO_SOLVER              : Dengo solver
 //                                   DT_FLU_SOLVER              : dt solver for fluid
 //                                   DT_GRA_SOLVER              : dt solver for gravity
 //                lv           : Target refinement level
@@ -96,6 +97,10 @@ void InvokeSolver( const Solver_t TSolver, const int lv, const double TimeNew, c
       Aux_Error( ERROR_INFO, "incorrect SaveSg_Flu (%d) !!\n", SaveSg_Flu );
 #  endif
 
+#  ifdef SUPPORT_DENGO
+   if (  TSolver == DENGO_SOLVER  && ( SaveSg_Flu != 0 && SaveSg_Flu != 1 )  )
+      Aux_Error( ERROR_INFO, "incorrect SaveSg_Flu (%d) !!\n", SaveSg_Flu );
+#  endif
 
 // set the maximum number of patch groups to be updated at a time
    int NPG_Max;
@@ -112,9 +117,13 @@ void InvokeSolver( const Solver_t TSolver, const int lv, const double TimeNew, c
 
 #     ifdef SUPPORT_GRACKLE
       case GRACKLE_SOLVER:             NPG_Max = CHE_GPU_NPGROUP;    break;
+
+      case DT_COOLING_SOLVER:         NPG_Max = FLU_GPU_NPGROUP;    break;
 #     endif
 
-#     ifdef SUPPORT_GRACKLE
+#     ifdef SUPPORT_DENGO
+      case DENGO_SOLVER:             NPG_Max = CHE_GPU_NPGROUP;    break;
+
       case DT_COOLING_SOLVER:         NPG_Max = FLU_GPU_NPGROUP;    break;
 #     endif
 
@@ -374,6 +383,16 @@ void Preparation_Step( const Solver_t TSolver, const int lv, const double TimeNe
       break;
 #     endif
 
+#     ifdef SUPPORT_DENGO
+      case DENGO_SOLVER :
+         Dengo_Prepare( lv, h_Che_Array[ArrayID], NPG, PID0_List );
+      break;
+
+      case DT_COOLING_SOLVER:
+         dt_Prepare_CoolingTime( lv, h_Cool_Array_T[ArrayID], NPG, PID0_List );
+      break;
+#     endif
+
       case DT_FLU_SOLVER:
          dt_Prepare_Flu( lv, h_Flu_Array_T[ArrayID], h_Mag_Array_T[ArrayID], NPG, PID0_List );
       break;
@@ -613,6 +632,13 @@ void Solver( const Solver_t TSolver, const int lv, const double TimeNew, const d
       break;
 #     endif // #ifdef SUPPORT_GRACKLE
 
+#     ifdef SUPPORT_DENGO
+      case DENGO_SOLVER :
+         CPU_DengoSolver( Che_FieldData, Che_Units, NPG, dt );
+
+      break;
+#     endif // #ifdef SUPPORT_DENGO
+
 
 #     if   ( MODEL == HYDRO )
       case DT_FLU_SOLVER:
@@ -627,12 +653,19 @@ void Solver( const Solver_t TSolver, const int lv, const double TimeNew, const d
 #        endif
       break;
 
-#ifdef SUPPORT_GRACKLE
+#     ifdef SUPPORT_GRACKLE
       case DT_COOLING_SOLVER:
           CPU_dtSolver_CoolingTime( h_dt_Array_T[ArrayID],  h_Cool_Array_T[ArrayID], NPG);
 
          break;
-#endif
+#     endif
+
+#     ifdef SUPPORT_DENGO
+      case DT_COOLING_SOLVER:
+          CPU_dtSolver_CoolingTime( h_dt_Array_T[ArrayID],  h_Cool_Array_T[ArrayID], NPG);
+
+         break;
+#     endif
 
 #     ifdef GRAVITY
       case DT_GRA_SOLVER:
@@ -740,6 +773,16 @@ void Closing_Step( const Solver_t TSolver, const int lv, const int SaveSg_Flu, c
          Grackle_Close( lv, SaveSg_Flu, h_Che_Array[ArrayID], NPG, PID0_List );
       break;
       
+      case DT_COOLING_SOLVER:
+         dt_Close( h_dt_Array_T[ArrayID], NPG );
+      break;
+#     endif
+
+#     ifdef SUPPORT_DENGO
+      case DENGO_SOLVER :
+        Dengo_Close( lv, SaveSg_Flu, h_Che_Array[ArrayID], NPG, PID0_List );
+      break;
+
       case DT_COOLING_SOLVER:
          dt_Close( h_dt_Array_T[ArrayID], NPG );
       break;

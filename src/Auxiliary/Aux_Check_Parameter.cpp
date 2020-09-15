@@ -711,6 +711,11 @@ void Aux_Check_Parameter()
       Aux_Message( stderr, "WARNING : currently we do not use Grackle to calculate temperature for OPT__FLAG_LOHNER_TEMP !!\n" );
 #  endif
 
+#  ifdef SUPPORT_DENGO
+   if ( DENGO_ACTIVATE && OPT__FLAG_LOHNER_TEMP )
+      Aux_Message( stderr, "WARNING : currently we do not use Dengo to calculate temperature for OPT__FLAG_LOHNER_TEMP !!\n" );
+#  endif
+
    if ( MIN_DENS == 0.0 )
       Aux_Message( stderr, "WARNING : MIN_DENS == 0.0 could be dangerous and is mainly for debugging only !!\n" );
    else

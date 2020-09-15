@@ -1412,6 +1412,7 @@ void Check_Makefile( const char *FileName, const int FormatVersion )
    LoadField( "SupportHDF5",            &RS.SupportHDF5,            SID, TID, NonFatal, &RT.SupportHDF5,            1, NonFatal );
    LoadField( "SupportGSL",             &RS.SupportGSL,             SID, TID, NonFatal, &RT.SupportGSL,             1, NonFatal );
    LoadField( "SupportGrackle",         &RS.SupportGrackle,         SID, TID, NonFatal, &RT.SupportGrackle,         1, NonFatal );
+   LoadField( "SupportDengo",           &RS.SupportDengo,           SID, TID, NonFatal, &RT.SupportDengo,           1, NonFatal );
    LoadField( "RandomNumber",           &RS.RandomNumber,           SID, TID, NonFatal, &RT.RandomNumber,           1, NonFatal );
 
    LoadField( "NLevel",                 &RS.NLevel,                 SID, TID, NonFatal, &RT.NLevel,                 1, NonFatal );
@@ -1885,6 +1886,25 @@ void Check_InputPara( const char *FileName, const int FormatVersion )
    LoadField( "Grackle_H2_OpaApprox",    &RS.Grackle_H2_OpaApprox,    SID, TID, NonFatal, &RT.Grackle_H2_OpaApprox,     1, NonFatal );
    LoadField( "Che_GPU_NPGroup",         &RS.Che_GPU_NPGroup,         SID, TID, NonFatal, &RT.Che_GPU_NPGroup,          1, NonFatal );
 #  endif
+
+
+// Dengo 
+#  ifdef SUPPORT_DENGO
+   LoadField( "Dengo_Activate",         &RS.Dengo_Activate,           SID, TID, NonFatal, &RT.Dengo_Activate,           1, NonFatal );
+   LoadField( "Dengo_Verbose",          &RS.Dengo_Verbose,            SID, TID, NonFatal, &RT.Dengo_Verbose,            1, NonFatal );
+   LoadField( "Dengo_Cooling",          &RS.Dengo_Cooling,            SID, TID, NonFatal, &RT.Dengo_Cooling,            1, NonFatal );
+   LoadField( "Dengo_Primordial",       &RS.Dengo_Primordial,         SID, TID, NonFatal, &RT.Dengo_Primordial,         1, NonFatal );
+   LoadField( "Dengo_Metal",            &RS.Dengo_Metal,              SID, TID, NonFatal, &RT.Dengo_Metal,              1, NonFatal );
+   LoadField( "Dengo_UV",               &RS.Dengo_UV,                 SID, TID, NonFatal, &RT.Dengo_UV,                 1, NonFatal );
+   LoadField( "Dengo_CMB_Floor",        &RS.Dengo_CMB_Floor,          SID, TID, NonFatal, &RT.Dengo_CMB_Floor,          1, NonFatal );
+   LoadField( "Dengo_PE_Heating",       &RS.Dengo_PE_Heating,         SID, TID, NonFatal, &RT.Dengo_PE_Heating,         1, NonFatal );
+   LoadField( "Dengo_PE_HeatingRate",   &RS.Dengo_PE_HeatingRate,     SID, TID, NonFatal, &RT.Dengo_PE_HeatingRate,     1, NonFatal );
+   LoadField( "Dengo_DataFile",         &RS.Dengo_DataFile,           SID, TID, NonFatal,  RT.Dengo_DataFile,           1, NonFatal );
+   LoadField( "Che_GPU_NPGroup",        &RS.Che_GPU_NPGroup,          SID, TID, NonFatal, &RT.Che_GPU_NPGroup,          1, NonFatal );
+   LoadField( "Dengo_reltol",           &RS.Dengo_reltol,             SID, TID, NonFatal, &RT.Dengo_reltol,             1, NonFatal );
+   LoadField( "Che_floor_value",        &RS.Dengo_floor_value,        SID, TID, NonFatal, &RT.Dengo_floor_value,        1, NonFatal );
+#  endif
+
 
 // star formation
 #  ifdef STAR_FORMATION

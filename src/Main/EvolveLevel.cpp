@@ -459,6 +459,24 @@ void EvolveLevel( const int lv, const double dTime_FaLv )
       } // if ( GRACKLE_ACTIVATE )
 #     endif // #ifdef SUPPORT_GRACKLE
 
+// *********************************
+//    6-1. Dengo cooling/heating
+// *********************************
+#     ifdef SUPPORT_DENGO
+      if ( DENGO_ACTIVATE )
+      {
+         const int SaveSg_Che = SaveSg_Flu;  // save in the same FluSg
+
+         if ( OPT__VERBOSE  &&  MPI_Rank == 0 )
+            Aux_Message( stdout, "   Lv %2d: Dengo_AdvanceDt, counter = %4ld ... ", lv, AdvanceCounter[lv] );
+
+//       we have assumed that Dengo_AdvanceDt() requires no ghost zones
+         TIMING_FUNC(   Dengo_AdvanceDt( lv, TimeNew, TimeOld, dt_SubStep, SaveSg_Che, false, false ),
+                        Timer_Che_Advance[lv]   );
+
+         if ( OPT__VERBOSE  &&  MPI_Rank == 0 )    Aux_Message( stdout, "done\n" );
+      } // if ( DENGO_ACTIVATE )
+#     endif // #ifdef SUPPORT_DENGO
 
 #     ifdef PARTICLE
 //    pass particles to the children patches here if OPT__MINIMIZE_MPI_BARRIER is adopted

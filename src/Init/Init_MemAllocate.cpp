@@ -49,6 +49,11 @@ void Init_MemAllocate()
       Init_MemAllocate_Grackle( CHE_GPU_NPGROUP );
 #  endif
 
+#  ifdef SUPPORT_DENGO
+   if ( DENGO_ACTIVATE )
+      Init_MemAllocate_Dengo( CHE_GPU_NPGROUP );
+#  endif
+
 
 // c. allocate load-balance variables
 #  ifdef LOAD_BALANCE

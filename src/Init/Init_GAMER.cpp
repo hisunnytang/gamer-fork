@@ -70,6 +70,10 @@ void Init_GAMER( int *argc, char ***argv )
    if ( GRACKLE_ACTIVATE )    Grackle_Init();
 #  endif
 
+// initialize Dengo 
+#  ifdef SUPPORT_DENGO
+   if ( DENGO_ACTIVATE )    Dengo_Init();
+#  endif
 
 // initialize parameters for the parallelization (rectangular domain decomposition)
    Init_Parallelization();
@@ -120,6 +124,9 @@ void Init_GAMER( int *argc, char ***argv )
    int POT_GPU_NPGROUP = NULL_INT;
 #  endif
 #  ifndef SUPPORT_GRACKLE
+   int CHE_GPU_NPGROUP = NULL_INT;
+#  endif
+#  ifndef SUPPORT_DENGO
    int CHE_GPU_NPGROUP = NULL_INT;
 #  endif
    CUAPI_Set_Default_GPU_Parameter( GPU_NSTREAM, FLU_GPU_NPGROUP, POT_GPU_NPGROUP, CHE_GPU_NPGROUP );

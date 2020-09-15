@@ -220,6 +220,16 @@ extern int             GRACKLE_H2_OPA_APPROX;
 extern int             CHE_GPU_NPGROUP;
 #endif
 
+// (2-7b?) Dengo
+// // ============================================================================================================
+#ifdef SUPPORT_DENGO
+extern bool            DENGO_ACTIVATE;
+extern bool            DENGO_VERBOSE;
+extern int             CHE_GPU_NPGROUP;
+extern double          DENGO_RELTOL;
+extern double          DENGO_FLOOR_VALUE;
+extern char            DENGO_DATA_TABLE[MAX_STRING];
+#endif
 
 // (2-8) star formation
 // ============================================================================================================
@@ -292,6 +302,14 @@ extern real       (*h_Che_Array      [2]);
 // do not declare Grackle variables for CUDA source files since they do not include <grackle.h>
 #ifndef __CUDACC__
 extern grackle_field_data *Che_FieldData;
+extern code_units Che_Units;
+#endif
+#endif
+
+#ifdef SUPPORT_DENGO
+extern real       (*h_Che_Array      [2]);
+#ifndef __CUDACC__
+extern dengo_field_data *Che_FieldData;
 extern code_units Che_Units;
 #endif
 #endif

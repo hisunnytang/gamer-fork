@@ -108,6 +108,12 @@ void Aux_TakeNote()
       fprintf( Note, "SUPPORT_GRACKLE                 OFF\n" );
 #     endif
 
+#     ifdef SUPPORT_DENGO
+      fprintf( Note, "SUPPORT_DENGO                 ON\n" );
+#     else
+      fprintf( Note, "SUPPORT_DENGO                 OFF\n" );
+#     endif
+
 //    b. options in HYDRO
 #     if   ( MODEL == HYDRO )
 
@@ -823,6 +829,20 @@ void Aux_TakeNote()
       fprintf( Note, "\n\n");
 #     endif // #ifdef SUPPORT_GRACKLE
 
+//    record the parameters of Dengo
+#     ifdef SUPPORT_DENGO
+      fprintf( Note, "Parameters of Dengo\n" );
+      fprintf( Note, "***********************************************************************************\n" );
+      fprintf( Note, "DENGO_ACTIVATE                %d\n",      DENGO_ACTIVATE        );
+      if ( DENGO_ACTIVATE ) {
+      fprintf( Note, "DENGO_VERBOSE                 %d\n",      DENGO_VERBOSE         );
+      fprintf( Note, "CHE_GPU_NPGROUP               %d\n",      CHE_GPU_NPGROUP         );
+      fprintf( Note, "DENGO_DATA_TABLE              %s\n",      DENGO_DATA_TABLE    );
+      fprintf( Note, "DENGO_RELTOL                  %0.5g\n",      DENGO_RELTOL);
+      fprintf( Note, "DENGO_FLOOR_VALUE             %0.5g\n",      DENGO_FLOOR_VALUE); }
+      fprintf( Note, "***********************************************************************************\n" );
+      fprintf( Note, "\n\n");
+#     endif // #ifdef SUPPORT_DENGO
 
 //    record the parameters of star formation
 #     ifdef STAR_FORMATION

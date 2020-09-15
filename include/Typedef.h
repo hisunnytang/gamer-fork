@@ -184,6 +184,10 @@ const Solver_t
   ,GRACKLE_SOLVER             = 4
   ,DT_COOLING_SOLVER          = 7
 #endif
+#ifdef SUPPORT_DENGO
+  ,DENGO_SOLVER               = 4
+  ,DT_COOLING_SOLVER          = 7
+#endif
   ,DT_FLU_SOLVER              = 5
 #ifdef GRAVITY
   ,DT_GRA_SOLVER              = 6

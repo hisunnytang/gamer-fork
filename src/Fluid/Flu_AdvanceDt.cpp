@@ -93,6 +93,9 @@ int Flu_AdvanceDt( const int lv, const double TimeNew, const double TimeOld, con
 #     ifdef SUPPORT_GRACKLE
       if ( !GRACKLE_ACTIVATE )
 #     endif
+#     ifdef SUPPORT_DENGO
+      if ( !DENGO_ACTIVATE )
+#     endif
       if ( OPT__RESET_FLUID )
       {
          if ( Flu_ResetByUser_API_Ptr != NULL )

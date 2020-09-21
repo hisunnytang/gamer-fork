@@ -45,6 +45,9 @@ SET_GLOBAL( FieldIdx_t Idx_HDI,           Idx_Undefined );
 SET_GLOBAL( FieldIdx_t Idx_Metal,         Idx_Undefined );
 SET_GLOBAL( FieldIdx_t Idx_CoolingTime,   Idx_Undefined );
 
+// Dengo fields
+#ifdef SUPPORT_DENGO
+#endif
 
 #elif ( MODEL == ELBDM )
 
